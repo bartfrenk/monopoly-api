@@ -35,5 +35,6 @@ Location json
 Team json
   name Text
   UniqueTeamName name
+  money Int
   deriving Show
 |]
