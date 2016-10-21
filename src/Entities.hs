@@ -9,14 +9,12 @@
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE TypeFamilies #-}
 
-module Entities where
+module Entities (module Entities, Entity) where
 
 import Database.Persist.TH
-import Database.Persist.Sql (Entity(..))
-import Data.Aeson
 import Data.Text
 import Data.Time.Clock
-import GHC.Generics
+import Database.Persist (Entity)
 
 import Types
 
@@ -28,6 +26,7 @@ Location json
   UniqueLocationName name
   type LocationType
   price Double Maybe
+  color Color
   latitude Latitude
   longitude Longitude
   deriving Show
@@ -35,6 +34,26 @@ Location json
 Team json
   name Text
   UniqueTeamName name
-  money Int
+  startingMoney Int
+  jailTime Bool
+  goBonus Money
   deriving Show
+
+Owns
+  teamId TeamId
+  locationId LocationId
+  since UTCTime
+  deriving Show
+
+Visit
+  when UTCTime
+  locationId LocationId
+  teamId TeamId
+  deriving Show
+
+Transaction
+  src TeamId
+  dest TeamId
+  amount Money
+  visitId VisitId Maybe
 |]

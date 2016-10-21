@@ -1,0 +1,80 @@
+#%RAML 0.8
+title: Monopoly Server API
+version: 0.1
+
+/locations:
+  get:
+    description: Return all locations.
+    responses:
+      200:
+  post:
+    description: Add a list of locations.
+    body:
+      application/json:
+        example: !include ../../target/samples/locations.json
+  /{locationId}:
+    /visit:
+      /{teamId}:
+        post:
+          description: |-
+            Register that specified team visits this location.
+
+            Visiting the location for a second time, without visiting another
+            location in between has no additional in-game effect. There is a
+            flag in the result that indicates whether this is such a second
+            visit in a row.
+
+            There are a number of distinct scenarios depending on the location and
+            the team,
+            - the location is Jail
+                - if the team is not jail bound, and not in jail, no effect
+                - if the team is jail bound then the jail timer start and the team
+                is considered to be in jail
+                - if the team is in jail no effect
+            - the location is Start
+                - if the team is start bound, it is no longer start bound and
+                receives the start bonus.
+                - otherwise, no effect.
+            - the location has an owner that is not the visiting team
+                - the visiting team has to pay rent
+            - the location is owned by the visiting team
+                - no effect
+            - the location is not yet owned by anyone, but could be
+                - the team has the option to buy the location after drawing a Chance
+                  card.
+
+          responses:
+            200:
+              description: |-
+                Succesfully registered the visit. The body depends on the scenario.
+
+                **Note**. Rent price is determined completely by the
+                backend. If the frontend needs to display additional
+                information, such as dice roll results, these are passed along
+                with the response.
+
+    /buy:
+      post:
+        description: |-
+          Team attempts to buy the specified location.
+
+          There are a number of possible outcomes
+          - sale was successful
+          - buying team did not have enough money
+          - the location is already owned by another team
+          - the location is not buyable (i.e. not a property)
+        queryParameters:
+          teamId:
+            description: ID of the buying team.
+            type: number
+            required: true
+        responses:
+          200:
+            description: |-
+              The sale was successfully evaluated.
+/teams:
+  post:
+    description: Register a single team.
+  /{teamId}:
+    /wallet:
+      get:

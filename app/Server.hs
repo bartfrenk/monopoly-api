@@ -14,7 +14,9 @@ import Servant
 
 import API (api, MonopolyAPI)
 import Entities (migrateAll)
+import Types
 import Handlers
+import Entities
 
 main :: IO ()
 main = do
@@ -31,12 +33,16 @@ postgres =
                 \password=monopoly \
                 \dbname=monopoly"
 
+type HandlerM = SqlPersistT (LoggingT (ExceptT ServantErr IO))
+
 server :: ByteString -> Server MonopolyAPI
-server connStr = enter (Nat f) (createTeam
+server connStr = enter (Nat f) (registerTeam
                            :<|> getAllLocations
-                           :<|> createLocations)
+                           :<|> registerLocations
+                           :<|> handleVisit)
   where
     filt = filterLogger (\_ lvl -> lvl > LevelDebug)
+    f :: SqlPersistT (LoggingT (ExceptT ServantErr IO)) a -> ExceptT ServantErr IO a
     f = runStdoutLoggingT . filt . runPostgreSql connStr 10
 
 tcpPort :: Int
