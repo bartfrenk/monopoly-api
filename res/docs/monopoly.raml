@@ -1,6 +1,6 @@
 #%RAML 0.8
 title: Monopoly Server API
-version: 0.1
+version: 0.2
 
 /locations:
   get:
@@ -41,7 +41,7 @@ version: 0.1
                 - no effect
             - the location is not yet owned by anyone, but could be
                 - the team has the option to buy the location after drawing a Chance
-                  card.
+                  card. in this case the chance cards are returned in the response.
 
           responses:
             200:
@@ -59,6 +59,7 @@ version: 0.1
           Team attempts to buy the specified location.
 
           There are a number of possible outcomes
+          - answer to chance card question was not correct. nothing happens.
           - sale was successful
           - buying team did not have enough money
           - the location is already owned by another team
@@ -67,6 +68,12 @@ version: 0.1
           teamId:
             description: ID of the buying team.
             type: number
+            required: true
+          chanceCard:
+            description: The ID of the chance card.
+            required: true
+          answer:
+            description: The index of the answer to specified chance card.
             required: true
         responses:
           200:
@@ -77,4 +84,8 @@ version: 0.1
     description: Register a single team.
   /{teamId}:
     /wallet:
-      get:
+      post:
+        body:
+          application/json:
+            description: >-
+              The current location of the team in latitude and longitude coordinates.
