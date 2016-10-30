@@ -11,9 +11,14 @@ help: ## Show this help
 	@fgrep -h "##" $(MAKEFILE_LIST) | \
 	fgrep -v fgrep | sed -e 's/## */##/' | column -t -s##
 
+build-all: ## Build everything
+build-all: build-server build-docs
 
-run: ## Run the server
+run-server: ## Run the server
 	@stack exec monopoly-server
+
+build-server: ## Build the server using Haskell Stack
+	@stack build
 
 build-res: ## Generate target files from resource files
 build-res: build-schemas build-samples build-docs

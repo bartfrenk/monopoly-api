@@ -25,6 +25,9 @@ library
                        Utils
   build-depends:       base >= 4.7 && < 5,
                        aeson,
+                       base64-bytestring,
+                       crypto-api,
+                       free,
                        monad-logger,
                        mtl,
                        persistent,

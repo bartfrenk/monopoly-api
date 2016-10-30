@@ -3,55 +3,57 @@
 
 module Types where
 
-import GHC.Generics
 import Data.Aeson
-import Data.Text
+import Data.ByteString
+import Data.Time.Clock
 import Database.Persist.TH
+import GHC.Generics
 
-type Latitude = Double
+type Currency = Int
+type Color = String
+type Token = ByteString
+type DieResult = Int
 
-type Longitude = Double
+data Location = Location {
+  latitude :: Double,
+  longitude :: Double
+  } deriving (Eq, Show, Read, Generic)
 
-data LocationType
+instance FromJSON Location
+instance ToJSON Location
+derivePersistField "Location"
+
+data TeamStatus
+  = ToJail
+  | ToStart Currency
+  | InJail UTCTime
+  | Free deriving (Eq, Show, Read, Generic)
+
+instance FromJSON TeamStatus
+instance ToJSON TeamStatus
+derivePersistField "TeamStatus"
+
+data UtilityType
+  = Water
+  | Electra deriving (Eq, Show, Read, Generic)
+instance FromJSON UtilityType
+instance ToJSON UtilityType
+derivePersistField "UtilityType"
+
+data SiteType
   = Street
   | Station
-  | Water
-  | Electra
+  | Utility UtilityType
   | Start
   | Jail deriving (Eq, Show, Read, Generic)
 
-type Color = String
+instance FromJSON SiteType
+instance ToJSON SiteType
+derivePersistField "SiteType"
 
-type Money = Int
-type Rent = Money
-
-instance FromJSON LocationType
-instance ToJSON LocationType
-derivePersistField "LocationType"
-
-data ChanceCard =
-  Question String String
-  deriving (Show, Generic)
-
+data ChanceCard = Question [String] Int deriving (Show, Generic, Eq)
 instance ToJSON ChanceCard
 
-type DiceResult = Int
-
-data VisitResult
-  = CanBuy [ChanceCard]
-  | OwnedByVisitor
-  | OwnedByOther Rent (Maybe DiceResult)
-  | LastVisitTooRecent
-  | ShouldBeInJail
-  | OnWayToStart deriving (Show, Generic)
-
-instance ToJSON VisitResult
-
-data BuyResult
-
-data TeamDetails = TeamDetails {
-  name :: !Text
-} deriving Generic
-
-instance FromJSON TeamDetails
+isCorrectAnswer :: ChanceCard -> Maybe Int -> Bool
+isCorrectAnswer (Question _ correct) = maybe True (== correct)
 
