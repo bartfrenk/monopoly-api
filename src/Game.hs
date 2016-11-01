@@ -1,6 +1,7 @@
 {-# LANGUAGE DeriveFunctor #-}
 module Game where
 
+import Control.Monad.Except
 import Control.Monad.Free
 
 import Models
@@ -12,7 +13,10 @@ data GameF token next
   | Transfer Currency Account Account (Bool -> next)
   | CreateSite Site (token -> next)
   | CreateTeam String Currency (token -> next)
-  | CreateChanceCard ChanceCard (Int -> next)
+  | GetTeam token (Maybe Team -> next)
+  | GetChanceCard token (Maybe ChanceCard -> next)
+  | GetSite token (Maybe Site -> next)
+  | CreateChanceCard ChanceCard (token -> next)
   | DrawChanceCards Int ([ChanceCard] -> next)
   | GetOwner Site (Maybe Team -> next)
   | PutInJail Team next
@@ -23,6 +27,15 @@ data GameF token next
   deriving Functor
 
 type GameAPI token = Free (GameF token)
+
+getTeam :: token -> GameAPI token (Maybe Team)
+getTeam teamTk = liftF $ GetTeam teamTk id
+
+getSite :: token -> GameAPI token (Maybe Site)
+getSite siteTk = liftF $ GetSite siteTk id
+
+getChanceCard :: token -> GameAPI token (Maybe ChanceCard)
+getChanceCard cardTk = liftF $ GetChanceCard cardTk id
 
 isRepeatedVisit :: Site -> Team -> GameAPI token Bool
 isRepeatedVisit site team = liftF $ IsRepeatedVisit site team id
@@ -57,5 +70,5 @@ freeFromJail team = liftF $ FreeFromJail team id
 drawChanceCards :: Int -> GameAPI token [ChanceCard]
 drawChanceCards count = liftF $ DrawChanceCards count id
 
-createChanceCard :: ChanceCard -> GameAPI token Int
+createChanceCard :: ChanceCard -> GameAPI token token
 createChanceCard card = liftF $ CreateChanceCard card id

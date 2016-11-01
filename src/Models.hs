@@ -8,12 +8,14 @@
 {-# LANGUAGE QuasiQuotes #-}
 {-# LANGUAGE TemplateHaskell #-}
 {-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE DuplicateRecordFields #-}
 
 module Models (module Models, module Types) where
 
 import Database.Persist.TH
 import Data.Time.Clock (UTCTime)
 import Data.ByteString.Char8 (pack)
+
 import Orphans()
 
 import Types
@@ -60,3 +62,11 @@ instance Eq Site where
 createStreet :: String -> Location -> Color -> Currency -> Site
 createStreet name' location color price =
   Site name' (pack name') location Street color Nothing (Just price)
+
+data TeamDetails = TeamDetails {
+  name :: String
+}
+
+data SiteDetails = SiteDetails {
+  name :: String
+}

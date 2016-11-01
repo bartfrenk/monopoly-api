@@ -7,7 +7,6 @@ import Crypto.Random
 import Data.Typeable
 import Data.Time.Clock
 
-
 import Database.Persist.Sql
 
 import Game
