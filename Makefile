@@ -3,19 +3,33 @@
 
 APP_NAME=Monopoly Server
 
+DB_PORT_HOST=8001
+SERVER_ADDRESS=localhost:8000
+
 .DEFAULT_GOAL:=help
 
+run-server: ## Run the Monopoly server and backing PostgreSQL instance.
+run-server: up-docker-pg
+	stack build
+	stack exec monopoly-server
 
 help: ## Show this help
 	@echo "Makefile for '${APP_NAME}'\n"
 	@fgrep -h "##" $(MAKEFILE_LIST) | \
 	fgrep -v fgrep | sed -e 's/## */##/' | column -t -s##
 
+load-locations: ## Load locations in YAML to the server.
+load-locations: target/samples/locations.json
+	curl ${SERVER_ADDRESS}/locations -H 'Content-Type: application/json' \
+		 -d @$<
+
+load-questions: ## Loads questions in YAML to the server.
+load-questions: target/samples/questions.json
+	curl -v ${SERVER_ADDRESS}/cards -H 'Content-Type: application/json' \
+		 -d @$<
+
 build-all: ## Build everything
 build-all: build-server build-docs
-
-run-server: ## Run the server
-	@stack exec monopoly-server
 
 build-server: ## Build the server using Haskell Stack
 	@stack build
@@ -28,6 +42,14 @@ build-docs: target/docs/monopoly.html
 
 build-schemas: ## Convert JSON schemas specified in YAML to JSON
 build-schemas:
+
+build-docker-pg: ## Build the PostgreSQL docker image.
+	docker build -t bartfrenk/monopoly-pg -f Dockerfile.pg .
+
+up-docker-pg: ## Run monopoly-pg in the background. Create it if it doesn't exist.
+	@docker create -p ${DB_PORT_HOST}:5432 --name monopoly-pg \
+			bartfrenk/monopoly-pg 2> /dev/null; \
+	docker start monopoly-pg
 
 # TODO: autogenerate targets
 build-samples: target/samples/locations.json \
