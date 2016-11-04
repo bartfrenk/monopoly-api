@@ -30,28 +30,16 @@ postgres :: ByteString
 postgres =
   pack
     "host=localhost \
-                \port=5432 \
+                \port=8001 \
                 \user=monopoly \
                 \password=monopoly \
                 \dbname=monopoly"
 
 type HandlerM = SqlPersistT (LoggingT (ExceptT (ClientError Token) IO))
 
-
+-- TODO: more specific
 toServantErr :: ClientError Token -> ServantErr
 toServantErr _ = err404
-
-
--- siteServer :: ByteString -> Server SiteAPI
--- siteServer connStr = enter (Nat f) (handleGetSites
---                            :<|> handleNewSites
---                            :<|> handleVisit
---                            :<|> handleBuy)
---   where
---     filt = filterLogger (\_ lvl -> lvl > LevelDebug)
---     f :: SqlPersistT (LoggingT (ExceptT (ClientError Token) IO)) a -> ExceptT ServantErr IO a
---     f =  withExceptT toServantErr . runStdoutLoggingT . filt . runPostgreSql connStr 10
-
 
 -- TODO: refactor
 server :: ByteString -> Server MonopolyAPI

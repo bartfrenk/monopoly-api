@@ -1,0 +1,46 @@
+FROM ubuntu:14.04
+MAINTAINER bart.frenk@gmail.com
+
+# Add the PostgreSQL PGP key to verify their Debian packages.
+# It should be the same key as https://www.postgresql.org/media/keys/ACCC4CF8.asc
+RUN apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 \
+--recv-keys B97B0AFCAA1A47F044F244A07FCC7D46ACCC4CF8
+
+# Install the latest stable release of PostgreSQL 9.5
+RUN echo "deb http://apt.postgresql.org/pub/repos/apt/ precise-pgdg main" > \
+/etc/apt/sources.list.d/pgdg.list
+
+# Install required packages (and silence warnings).
+RUN DEBIAN_FRONTEND=noninteractive \
+apt-get update && \
+DEBIAN_FRONTEND=noninteractive apt-get install -y \
+python-software-properties \
+software-properties-common \
+postgresql-9.5 \
+postgresql-client-9.5 \
+postgresql-contrib-9.5
+
+USER postgres
+
+# Allow remote connection to the database.
+RUN echo "host all  all    0.0.0.0/0  md5" >> /etc/postgresql/9.5/main/pg_hba.conf
+
+# Have PostgreSQL listen to all available IP addresses.
+RUN echo "listen_addresses='*'" >> /etc/postgresql/9.5/main/postgresql.conf
+
+# REVIEW: Template set to template0 since template uses ASCII encoding.
+# Create user `lemonpi` with superuser privileges. Create database `test`.
+RUN /etc/init.d/postgresql start && \
+psql --command "CREATE USER monopoly WITH PASSWORD 'monopoly';" && \
+createdb -O monopoly monopoly -E UTF-8 -T template0
+
+# Expose the PostgreSQL port.
+EXPOSE 5432
+
+# Backup config, logs and databases to Docker volumes.
+VOLUME  ["/etc/postgresql", "/var/log/postgresql", "/var/lib/postgresql"]
+
+# Default command is to start the postgres server with specified data dir.
+CMD ["/usr/lib/postgresql/9.5/bin/postgres", \
+"-D", "/var/lib/postgresql/9.5/main", \
+"-c", "config_file=/etc/postgresql/9.5/main/postgresql.conf"]
