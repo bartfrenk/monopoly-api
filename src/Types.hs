@@ -47,13 +47,10 @@ data SiteType
   | Start
   | Jail deriving (Eq, Show, Read, Generic)
 
-instance FromJSON SiteType
-instance ToJSON SiteType
+instance FromJSON SiteType where
+  parseJSON v = read <$> parseJSON v
+
+instance ToJSON SiteType where
+  toJSON = toJSON . show
+
 derivePersistField "SiteType"
-
-data ChanceCard = Question [String] Int deriving (Show, Generic, Eq)
-instance ToJSON ChanceCard
-
-isCorrectAnswer :: ChanceCard -> Maybe Int -> Bool
-isCorrectAnswer (Question _ correct) = maybe True (== correct)
-

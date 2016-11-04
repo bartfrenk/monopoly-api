@@ -5,6 +5,9 @@ import Data.Aeson (ToJSON (..), FromJSON (..))
 import Data.ByteString (ByteString)
 import Data.ByteString.Base64 (encode, decodeLenient)
 import Data.ByteString.Char8 (pack, unpack)
+import qualified Data.Text as Text
+import Data.Text (Text)
+import Web.HttpApiData
 
 encodeBase64 :: ByteString -> String
 encodeBase64 = unpack . encode
@@ -17,3 +20,6 @@ instance ToJSON ByteString where
 
 instance FromJSON ByteString where
   parseJSON v = decodeBase64 `fmap` parseJSON v
+
+instance FromHttpApiData ByteString where
+  parseUrlPiece txt = Right $ decodeBase64 $ Text.unpack txt

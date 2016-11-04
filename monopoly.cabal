@@ -16,18 +16,22 @@ cabal-version:       >=1.10
 library
   hs-source-dirs:      src
   exposed-modules:     API
-                       Entities
                        Handlers
-                       Lib
-                       Monopoly
-                       Store
+                       Game
+                       Client
+                       Orphans
+                       Models
+                       ToGame
+                       ToPersist
                        Types
                        Utils
   build-depends:       base >= 4.7 && < 5,
                        aeson,
                        base64-bytestring,
+                       bytestring,
                        crypto-api,
                        free,
+                       http-api-data,
                        monad-logger,
                        mtl,
                        persistent,

@@ -1,11 +1,15 @@
+{-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE DuplicateRecordFields #-}
 module ToPersist where
 
-import Control.Monad.Trans (MonadIO, liftIO)
-import Control.Monad.Free (foldFree)
 import Control.Exception
+import Control.Monad.Free (foldFree)
+import Control.Monad.Trans (MonadIO, liftIO)
 import Crypto.Random
-import Data.Typeable
+import Data.Maybe
 import Data.Time.Clock
+import Data.Typeable
+
 
 import Database.Persist.Sql
 
@@ -16,14 +20,14 @@ data InvalidState = InvalidState String deriving (Typeable, Show)
 
 instance Exception InvalidState
 
-toPersist :: MonadIO m => GameAPI Token a -> SqlPersistT m a
-toPersist = foldFree toPersist'
+interpret :: MonadIO m => GameAPI Token a -> SqlPersistT m a
+interpret = foldFree interpret'
 
-toPersist' :: MonadIO m => GameF Token a -> SqlPersistT m a
+interpret' :: MonadIO m => GameF Token a -> SqlPersistT m a
 
-toPersist' (GetRent site cont) = undefined
+interpret' (GetRent site cont) = undefined
 
-toPersist' (Transfer amount src dest cont) =
+interpret' (Transfer amount src dest cont) =
   case (src, dest) of
     (Bank, Bank) -> return $ cont True
     (Bank, TeamAcc team) -> do
@@ -44,27 +48,68 @@ toPersist' (Transfer amount src dest cont) =
         return $ cont True
 
 
-toPersist' (CreateSite site cont) = undefined
+interpret' (CreateSite SiteDetails{..} cont) = do
+  token <- liftIO createToken
+  let site = Site {
+        siteName = name,
+        siteToken = token,
+        siteLocation = location,
+        siteType = sitetype,
+        siteColor = color,
+        sitePrice = price,
+        siteOwner = Nothing
+        }
+  _ <- insert site
+  return $ cont token
 
-toPersist' (CreateChanceCard card cont) = undefined
+interpret' (CreateChanceCard CardDetails{..} cont) = do
+  token <- liftIO createToken
+  msiteTk <- -- throw when name does not match
+    case cardSiteName of
+      Nothing -> return Nothing
+      Just n -> do
+        s <- getBy $ UniqueSiteName n
+        return $ Just . siteToken . entityVal . fromJust $ s
 
-toPersist' (DrawChanceCards count cont) = undefined
+  let card = ChanceCard {
+        chanceCardToken = token,
+        chanceCardQuestion = question,
+        chanceCardOptions = options,
+        chanceCardSiteToken = msiteTk,
+        chanceCardAnswer = answer
+        }
+  _ <- insert card
+  return $ cont token
 
-toPersist' (IsRepeatedVisit site team cont) = undefined
+interpret' (GetSites cont) = do
+  sites <- selectList [] []
+  return $ cont $ (getDetails . entityVal) `map` sites
+    where
+      getDetails Site{..} = SiteDetails {
+        name = siteName,
+        location = siteLocation,
+        sitetype = siteType,
+        color = siteColor,
+        price = sitePrice
+        }
 
--- toPersist' (Transfer amount src dest cont) =
+interpret' (DrawChanceCards count cont) = undefined
+
+interpret' (IsRepeatedVisit site team cont) = undefined
+
+-- interpret' (Transfer amount src dest cont) =
 --   case (src, dest) of
 --     (Bank, Bank) -> return $ cont True
 --     (Bank, TeamAcc dest') -> updateTeam { dest' { teamWallet =
 
 -- TODO: handle duplicate token
-toPersist' (CreateTeam name funds cont) = do
+interpret' (CreateTeam details funds cont) = do
   token <- liftIO createToken
-  let team = Team name token funds Free
+  let team = Team (name (details :: TeamDetails)) token funds Free
   _ <- insert team
   return $ cont token
 
-toPersist' (PayStartBonus team cont) = do
+interpret' (PayStartBonus team cont) = do
   let team' =
         case teamStatus team of
           ToStart bonus -> team { teamWallet = teamWallet team + bonus,
@@ -73,21 +118,21 @@ toPersist' (PayStartBonus team cont) = do
   updateTeam team'
   return cont
 
-toPersist' (PutInJail team cont) = do
+interpret' (PutInJail team cont) = do
   t <- liftIO getCurrentTime
   updateTeam $ team { teamStatus = InJail t }
   return cont
 
-toPersist' (FreeFromJail team cont) = do
+interpret' (FreeFromJail team cont) = do
   let team' = team { teamStatus = Free }
   updateTeam team'
   return $ cont team'
 
-toPersist' (MakeOwner site team cont) = do
+interpret' (MakeOwner site team cont) = do
   updateSite $ site { siteOwner = Just $ teamToken team }
   return cont
 
-toPersist' (GetOwner site cont) = do
+interpret' (GetOwner site cont) = do
   owner' <- getOwnerFromStore site
   return $ cont owner'
 

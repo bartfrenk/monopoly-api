@@ -1,6 +1,5 @@
 module ToGame where
 
-import Control.Monad.Except
 import Control.Monad.Free (foldFree)
 import Data.Time.Clock
 
@@ -15,12 +14,12 @@ startingMoney :: Currency
 startingMoney = 1000
 
 
-toGame :: ClientAPI token a -> GameAPI token a
-toGame = foldFree toGame'
+interpret :: ClientAPI token a -> GameAPI token a
+interpret = foldFree interpret'
 
-toGame' :: ClientF token a -> GameAPI token a
+interpret' :: ClientF token a -> GameAPI token a
 
-toGame' (Visit siteTk visitorTk t cont) = do
+interpret' (Visit siteTk visitorTk t cont) = do
   site' <- getSite siteTk
   visitor' <- getTeam visitorTk
   case (site', visitor') of
@@ -28,7 +27,7 @@ toGame' (Visit siteTk visitorTk t cont) = do
     (_, Nothing) -> return $ cont $ Left $ TeamNotFound visitorTk
     (Just site, Just visitor) -> doVisit site visitor t cont
 
-toGame' (Buy siteTk buyerTk cardTk manswer cont) = do
+interpret' (Buy siteTk buyerTk cardTk manswer cont) = do
   site' <- getSite siteTk
   buyer' <- getTeam buyerTk
   card' <- getChanceCard cardTk
@@ -39,17 +38,21 @@ toGame' (Buy siteTk buyerTk cardTk manswer cont) = do
     (Just site, Just buyer, Just card) ->
       doBuy site buyer card manswer cont
 
-toGame' (NewTeam name cont) = do
-  token <- createTeam name startingMoney
+interpret' (NewTeam team cont) = do
+  token <- createTeam team startingMoney
   return $ cont token
 
-toGame' (NewSite site cont) = do
+interpret' (NewSite site cont) = do
   token <- createSite site
   return $ cont token
 
-toGame' (NewChanceCard card cont) = do
+interpret' (NewChanceCard card cont) = do
   token <- createChanceCard card
   return $ cont token
+
+interpret' (ListSites cont) = do
+  sites <- getSites
+  return $ cont sites
 
 doVisit :: Site -> Team -> Time
         -> (Either (ClientError token) VisitResult -> a) -> GameAPI token a

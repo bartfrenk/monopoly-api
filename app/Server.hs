@@ -11,18 +11,20 @@ import Database.Persist.Postgresql
 import Data.ByteString (ByteString)
 import Data.ByteString.Char8 (pack)
 import Servant
+import Text.Printf
 
-import API (api, MonopolyAPI)
-import Entities (migrateAll)
-import Types
+import API
+import Models
 import Handlers
-import Entities
 
 main :: IO ()
 main = do
   migratePostgreSql
-  putStrLn "Monopoly server"
+  printf "Monopoly server running on port %d\n" tcpPort
   run tcpPort $ serve api (server postgres)
+
+siteAPI :: Proxy SiteAPI
+siteAPI = Proxy
 
 postgres :: ByteString
 postgres =
@@ -33,17 +35,39 @@ postgres =
                 \password=monopoly \
                 \dbname=monopoly"
 
-type HandlerM = SqlPersistT (LoggingT (ExceptT ServantErr IO))
+type HandlerM = SqlPersistT (LoggingT (ExceptT (ClientError Token) IO))
 
+
+toServantErr :: ClientError Token -> ServantErr
+toServantErr _ = err404
+
+
+-- siteServer :: ByteString -> Server SiteAPI
+-- siteServer connStr = enter (Nat f) (handleGetSites
+--                            :<|> handleNewSites
+--                            :<|> handleVisit
+--                            :<|> handleBuy)
+--   where
+--     filt = filterLogger (\_ lvl -> lvl > LevelDebug)
+--     f :: SqlPersistT (LoggingT (ExceptT (ClientError Token) IO)) a -> ExceptT ServantErr IO a
+--     f =  withExceptT toServantErr . runStdoutLoggingT . filt . runPostgreSql connStr 10
+
+
+-- TODO: refactor
 server :: ByteString -> Server MonopolyAPI
-server connStr = enter (Nat f) (registerTeam
-                           :<|> getAllLocations
-                           :<|> registerLocations
-                           :<|> handleVisit)
+server connStr = siteServer :<|> teamServer :<|> cardServer
   where
+    siteServer = enter (Nat f) $
+      handleListSites :<|>
+      handleNewSites :<|>
+      handleVisit :<|>
+      handleBuy
+    teamServer = enter (Nat f) handleNewTeam
+    cardServer :: [CardDetails] -> Handler [Token]
+    cardServer = enter (Nat f) handleNewChanceCards
     filt = filterLogger (\_ lvl -> lvl > LevelDebug)
-    f :: SqlPersistT (LoggingT (ExceptT ServantErr IO)) a -> ExceptT ServantErr IO a
-    f = runStdoutLoggingT . filt . runPostgreSql connStr 10
+    f :: HandlerM a -> Handler a
+    f =  withExceptT toServantErr . runStdoutLoggingT . filt . runPostgreSql connStr 10
 
 tcpPort :: Int
 tcpPort = 8000

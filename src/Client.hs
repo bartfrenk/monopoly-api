@@ -1,9 +1,11 @@
 {-# LANGUAGE DeriveFunctor #-}
+{-# LANGUAGE DeriveGeneric #-}
 module Client where
 
-import Control.Monad.Except (ExceptT)
 import Control.Monad.Free (Free, liftF)
 import Data.Time.Clock
+import Data.Aeson
+import GHC.Generics
 
 import Models hiding (Visit)
 type Time = UTCTime
@@ -14,7 +16,7 @@ data ClientError token
   | ChanceCardNotFound token
 
 data VisitResult
-  = ChanceCards [ChanceCard]
+  = ChanceCards [ChanceResults]
   | InsufficientFundsToBuy
   | InsufficientFundsToRent
   | StartBonus
@@ -22,7 +24,9 @@ data VisitResult
   | TeamJailed
   | VisitedWhileInJail
   | RepeatedVisit
-  | NoVisitResult
+  | NoVisitResult deriving (Show, Eq, Generic)
+
+instance ToJSON BuyResult
 
 data BuyResult
   = Success
@@ -30,12 +34,15 @@ data BuyResult
   | WrongAnswer
   | BuyIllegal
   | BuyerNotFound
-  | BuySiteNotFound
+  | BuySiteNotFound deriving (Show, Eq, Generic)
+
+instance ToJSON VisitResult
 
 data ClientF token next
-  = NewSite Site (token -> next)
-  | NewTeam String (token -> next)
-  | NewChanceCard ChanceCard (token -> next)
+  = NewSite SiteDetails (token -> next)
+  | NewTeam TeamDetails (token -> next)
+  | NewChanceCard CardDetails (token -> next)
+  | ListSites ([SiteDetails] -> next)
   | Visit token token Time (Either (ClientError token) VisitResult -> next)
   | Buy token token token (Maybe Int) (Either (ClientError token) BuyResult -> next)
   | Update token Location (Currency -> next) -- idem
@@ -43,14 +50,17 @@ data ClientF token next
 
 type ClientAPI token = Free (ClientF token)
 
-newSite :: Site -> ClientAPI token token
+newSite :: SiteDetails -> ClientAPI token token
 newSite site = liftF $ NewSite site id
 
-newTeam :: String -> ClientAPI token token
-newTeam name = liftF $ NewTeam name id
+newTeam :: TeamDetails -> ClientAPI token token
+newTeam team = liftF $ NewTeam team id
 
-newChanceCard :: ChanceCard -> ClientAPI token token
+newChanceCard :: CardDetails -> ClientAPI token token
 newChanceCard card = liftF $ NewChanceCard card id
+
+listSites :: ClientAPI token [SiteDetails]
+listSites = liftF $ ListSites id
 
 visit :: token -> token -> Time
       -> ClientAPI token (Either (ClientError token) VisitResult)
