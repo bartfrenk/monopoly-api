@@ -30,7 +30,9 @@ build-schemas: ## Convert JSON schemas specified in YAML to JSON
 build-schemas:
 
 # TODO: autogenerate targets
-build-samples: target/samples/locations.json target/samples/team-1.json
+build-samples: target/samples/locations.json \
+			   target/samples/team-1.json \
+			   target/samples/questions.json
 
 clean-all: ## Remove all generated files
 clean-all: clean-target clean-stack

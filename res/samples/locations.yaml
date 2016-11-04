@@ -1,27 +1,31 @@
 - name: Jail
-  type: Jail
+  sitetype: Jail
   color: Black
-  latitude: 12.2
-  longitude: 23.2
+  location:
+    latitude: 12.2
+    longitude: 23.2
 
 - name: Witte Dame
-  type: Street
+  sitetype: Street
   color: Yellow
   price: 20
-  latitude: 31.4
-  longitude: 24.4
+  location:
+    latitude: 31.4
+    longitude: 24.4
 
 - name: Parktheater
-  type: Street
+  sitetype: Street
   price: 40
   color: Blue
-  latitude: 31.4
-  longitude: 24.4
+  location:
+    latitude: 31.4
+    longitude: 24.4
 
 - name: Stadswandelpark
-  type: Street
+  sitetype: Street
   price: 80
   color: Blue
-  latitude: 31.5
-  longitude: 36
+  location:
+    latitude: 31.5
+    longitude: 36
 
