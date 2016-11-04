@@ -27,6 +27,18 @@ interpret' :: MonadIO m => GameF Token a -> SqlPersistT m a
 
 interpret' (GetRent site cont) = undefined
 
+interpret' (GetTeam teamTk cont) = do
+  team <- getBy $ UniqueTeamToken teamTk
+  return $ cont (entityVal `fmap` team)
+
+interpret' (GetSite siteTk cont) = do
+  site <- getBy $ UniqueSiteToken siteTk
+  return $ cont (entityVal `fmap` site)
+
+interpret' (GetChanceCard cardTk cont) = do
+  card <- getBy $ UniqueCardToken cardTk
+  return $ cont (entityVal `fmap` card)
+
 interpret' (Transfer amount src dest cont) =
   case (src, dest) of
     (Bank, Bank) -> return $ cont True
@@ -46,7 +58,6 @@ interpret' (Transfer amount src dest cont) =
         updateTeam $ src' { teamWallet = teamWallet src' - amount }
         updateTeam $ dest' { teamWallet = teamWallet dest' + amount }
         return $ cont True
-
 
 interpret' (CreateSite SiteDetails{..} cont) = do
   token <- liftIO createToken
@@ -83,19 +94,15 @@ interpret' (CreateChanceCard CardDetails{..} cont) = do
 
 interpret' (GetSites cont) = do
   sites <- selectList [] []
-  return $ cont $ (getDetails . entityVal) `map` sites
-    where
-      getDetails Site{..} = SiteDetails {
-        name = siteName,
-        location = siteLocation,
-        sitetype = siteType,
-        color = siteColor,
-        price = sitePrice
-        }
+  return $ cont $ entityVal `map` sites
 
 interpret' (DrawChanceCards count cont) = undefined
 
-interpret' (IsRepeatedVisit site team cont) = undefined
+-- TODO: implement
+interpret' (IsRepeatedVisit site team cont) = do
+  liftIO $ print site
+  liftIO $ print team
+  return $ cont False
 
 -- interpret' (Transfer amount src dest cont) =
 --   case (src, dest) of

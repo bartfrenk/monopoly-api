@@ -12,7 +12,7 @@ import Servant
 import Models
 import Client
 
-type SiteAPI = Get '[JSON] [SiteDetails] :<|>
+type SiteAPI = Get '[JSON] [Site] :<|>
                    ReqBody '[JSON] [SiteDetails] :> Post '[JSON] [Token] :<|>
                    Capture "location" Token
                      :> "visit" :> Capture "team" Token

@@ -13,7 +13,8 @@ type Time = UTCTime
 data ClientError token
   = TeamNotFound token
   | SiteNotFound token
-  | ChanceCardNotFound token
+  | ChanceCardNotFound token deriving (Show, Eq)
+
 
 data VisitResult
   = ChanceCards [ChanceResults]
@@ -42,7 +43,7 @@ data ClientF token next
   = NewSite SiteDetails (token -> next)
   | NewTeam TeamDetails (token -> next)
   | NewChanceCard CardDetails (token -> next)
-  | ListSites ([SiteDetails] -> next)
+  | ListSites ([Site] -> next)
   | Visit token token Time (Either (ClientError token) VisitResult -> next)
   | Buy token token token (Maybe Int) (Either (ClientError token) BuyResult -> next)
   | Update token Location (Currency -> next) -- idem
@@ -59,7 +60,7 @@ newTeam team = liftF $ NewTeam team id
 newChanceCard :: CardDetails -> ClientAPI token token
 newChanceCard card = liftF $ NewChanceCard card id
 
-listSites :: ClientAPI token [SiteDetails]
+listSites :: ClientAPI token [Site]
 listSites = liftF $ ListSites id
 
 visit :: token -> token -> Time

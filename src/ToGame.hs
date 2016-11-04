@@ -1,6 +1,7 @@
 module ToGame where
 
 import Control.Monad.Free (foldFree)
+import Control.Monad.Trans (liftIO)
 import Data.Time.Clock
 
 import Models hiding (Visit, createTeam)
@@ -37,6 +38,8 @@ interpret' (Buy siteTk buyerTk cardTk manswer cont) = do
     (_, _, Nothing) -> return $ cont $ Left $ ChanceCardNotFound cardTk
     (Just site, Just buyer, Just card) ->
       doBuy site buyer card manswer cont
+
+interpret' (Update teamTk loc cont) = undefined
 
 interpret' (NewTeam team cont) = do
   token <- createTeam team startingMoney
@@ -75,7 +78,7 @@ doVisit site visitor t cont = do
         doVisit site visitor' t cont
       else return $ cont $ Right VisitedWhileInJail
 
-    (Free, _, Just price) -> do
+    (Free, _, Just _price) -> do
       mowner <- getOwner site
       case mowner of
 
@@ -87,7 +90,7 @@ doVisit site visitor t cont = do
             else return $ cont $ Right InsufficientFundsToRent
 
         Nothing ->
-          if price <= teamWallet visitor then do
+          if _price <= teamWallet visitor then do
             chanceCards <- drawChanceCards 3
             return $ cont $ Right (ChanceCards chanceCards)
           else return $ cont $ Right InsufficientFundsToBuy

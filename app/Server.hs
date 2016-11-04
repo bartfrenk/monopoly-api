@@ -10,6 +10,7 @@ import Network.Wai.Handler.Warp (run)
 import Database.Persist.Postgresql
 import Data.ByteString (ByteString)
 import Data.ByteString.Char8 (pack)
+import qualified Data.ByteString.Lazy.Char8 as Lazy
 import Servant
 import Text.Printf
 
@@ -39,7 +40,7 @@ type HandlerM = SqlPersistT (LoggingT (ExceptT (ClientError Token) IO))
 
 -- TODO: more specific
 toServantErr :: ClientError Token -> ServantErr
-toServantErr _ = err404
+toServantErr err = err404 { errBody = Lazy.pack . show $ err }
 
 -- TODO: refactor
 server :: ByteString -> Server MonopolyAPI

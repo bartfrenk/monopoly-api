@@ -16,7 +16,7 @@ interpret :: MonadIO m => ClientAPI Token a -> SqlPersistT m a
 interpret = ToPersist.interpret . ToGame.interpret
 
 handleListSites :: MonadIO m
-               => SqlPersistT m [SiteDetails]
+               => SqlPersistT m [Site]
 handleListSites = interpret listSites
 
 handleNewTeam :: MonadIO m
@@ -35,6 +35,8 @@ handleVisit :: (MonadIO m, MonadError (ClientError Token) m)
             => Token -> Token -> SqlPersistT m VisitResult
 handleVisit siteTk teamTk = do
   now <- liftIO getCurrentTime
+  liftIO $ print siteTk
+  liftIO $ print teamTk
   result <- interpret (visit siteTk teamTk now)
   case result of
     Left err -> throwError err

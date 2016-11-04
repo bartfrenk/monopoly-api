@@ -8,15 +8,15 @@ import Models
 data Account = TeamAcc Team | Bank
 
 data GameF token next
-  = GetRent Site ((Currency, [DieResult]) -> next)
-  | Transfer Currency Account Account (Bool -> next)
-  | CreateSite SiteDetails (token -> next)
+  = CreateSite SiteDetails (token -> next)
   | CreateTeam TeamDetails Currency (token -> next)
+  | CreateChanceCard CardDetails (token -> next)
+  | GetRent Site ((Currency, [DieResult]) -> next)
+  | Transfer Currency Account Account (Bool -> next)
   | GetTeam token (Maybe Team -> next)
   | GetChanceCard token (Maybe ChanceCard -> next)
   | GetSite token (Maybe Site -> next)
-  | GetSites ([SiteDetails] -> next)
-  | CreateChanceCard CardDetails (token -> next)
+  | GetSites ([Site] -> next)
   | DrawChanceCards Int ([ChanceResults] -> next)
   | GetOwner Site (Maybe Team -> next)
   | PutInJail Team next
@@ -34,7 +34,7 @@ getTeam teamTk = liftF $ GetTeam teamTk id
 getSite :: token -> GameAPI token (Maybe Site)
 getSite siteTk = liftF $ GetSite siteTk id
 
-getSites :: GameAPI token [SiteDetails]
+getSites :: GameAPI token [Site]
 getSites = liftF $ GetSites id
 
 getChanceCard :: token -> GameAPI token (Maybe ChanceCard)
