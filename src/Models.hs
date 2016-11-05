@@ -96,6 +96,28 @@ data SiteU = SiteU
 
 instance FromJSON SiteU
 
+data SiteD = SiteD
+  { name :: String
+  , location :: Location
+  , siteType :: SiteType
+  , color :: Color
+  , token :: SiteToken
+  , price :: Maybe Money
+  } deriving (Eq, Show, Generic)
+
+instance ToJSON SiteD
+
+toSiteD :: Site -> SiteD
+toSiteD Site {..} =
+  SiteD
+  { name = siteName
+  , location = siteLocation
+  , siteType = siteSiteType
+  , color = siteColor
+  , price = sitePrice
+  , token = siteToken
+  }
+
 data QuestionU = QuestionU
   { phrase :: String
   , options :: [String]

@@ -13,7 +13,7 @@ import Models
 import Handlers
 import Game
 
-type SiteAPI = Get '[JSON] [SiteE]
+type SiteAPI = Get '[JSON] [SiteD]
           :<|> ReqBody '[JSON] [SiteU] :> Post '[JSON] [SiteE]
           :<|> Capture "siteT" SiteToken :>
                   "visit" :> Capture "teamT" TeamToken

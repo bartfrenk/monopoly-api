@@ -201,8 +201,10 @@ newQuestions = mapM newQuestion
 
 listSites
   :: MonadAction m
-  => SqlPersistT m [SiteE]
-listSites = selectList [] []
+  => SqlPersistT m [SiteD]
+listSites = do
+  sitesE <- selectList [] []
+  return $ (toSiteD . entityVal) `fmap` sitesE
 
 syncTeam
   :: MonadAction m
@@ -212,6 +214,7 @@ syncTeam teamT loc = do
   case mteamE of
     Nothing -> throwError $ TeamNotFound teamT
     Just teamE -> do
+      -- TODO: TeamLocation needs timestamp
       _ <- insert $ TeamLocation (entityKey teamE) loc
       team <- updateTeam teamE
       return (teamMoney team, teamStatus team)
