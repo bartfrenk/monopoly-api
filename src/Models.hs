@@ -23,7 +23,6 @@ import Data.Time.Clock (UTCTime)
 import Database.Persist
 import Database.Persist.TH
 import GHC.Generics
-import Orphans ()
 import Types
 
 share
@@ -45,7 +44,7 @@ Site json
   token SiteToken
   UniqueSiteToken token
   location Location
-  type SiteType
+  siteType SiteType
   color Color
   ownerId TeamId Maybe
   price Money Maybe
@@ -90,7 +89,7 @@ instance FromJSON TeamU
 data SiteU = SiteU
   { name :: String
   , location :: Location
-  , siteType_ :: SiteType
+  , siteType :: SiteType
   , color :: Color
   , price :: Maybe Money
   } deriving (Eq, Show, Generic)

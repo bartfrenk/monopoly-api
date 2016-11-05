@@ -9,13 +9,10 @@ module Main where
 
 import Control.Monad.Except
 import Control.Monad.Logger
-import Control.Monad.Trans.Control (MonadBaseControl)
 import Network.Wai.Handler.Warp (run)
 
-import Data.Text.Lazy.Encoding (encodeUtf8)
 import Database.Persist.Postgresql
 import Data.ByteString (ByteString)
-import Data.ByteString.Char8 (pack)
 import qualified Data.ByteString.Lazy.Char8 as Lazy
 import Servant
 import Text.Printf
@@ -23,8 +20,7 @@ import BasicPrelude hiding (encodeUtf8)
 
 import API
 import Models
-import Game
-import Actions
+import Handlers
 
 main :: IO ()
 main = do

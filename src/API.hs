@@ -10,7 +10,7 @@ module API (module API, ActionErr) where
 import Servant
 
 import Models
-import Actions
+import Handlers
 import Game
 
 type SiteAPI = Get '[JSON] [SiteE]

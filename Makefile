@@ -25,7 +25,7 @@ load-locations: target/samples/locations.json
 
 load-questions: ## Loads questions in YAML to the server.
 load-questions: target/samples/questions.json
-	curl ${SERVER_ADDRESS}/cards -H 'Content-Type: application/json' \
+	curl ${SERVER_ADDRESS}/questions -H 'Content-Type: application/json' \
 		 -d @$<
 
 load-team: # Loads a team into the server.

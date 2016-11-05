@@ -16,13 +16,9 @@ cabal-version:       >=1.10
 library
   hs-source-dirs:      src
   exposed-modules:     API
-                       Handlers
                        Game
-                       Client
-                       Orphans
+                       Handlers
                        Models
-                       ToGame
-                       ToPersist
                        Types
                        Utils
   build-depends:       base >= 4.7 && < 5,
@@ -31,7 +27,6 @@ library
                        bytestring,
                        basic-prelude,
                        bytestring-conversion,
-                       crypto-api,
                        random,
                        free,
                        http-api-data,
@@ -50,10 +45,11 @@ executable monopoly-server
   main-is:             Server.hs
   ghc-options:         -threaded -rtsopts -with-rtsopts=-N
   build-depends:       base,
-                       monopoly,
+                       basic-prelude,
                        bytestring,
                        monad-control,
                        monad-logger,
+                       monopoly,
                        mtl,
                        persistent-postgresql,
                        servant-server,
