@@ -5,7 +5,7 @@ description:         Please see README.md
 homepage:            https://github.com/githubuser/monopoly#readme
 license:             BSD3
 license-file:        LICENSE
-author:              Author name here
+author:              Bart Frenk
 maintainer:          example@example.com
 copyright:           2016 Author name here
 category:            Web
@@ -29,7 +29,10 @@ library
                        aeson,
                        base64-bytestring,
                        bytestring,
+                       basic-prelude,
+                       bytestring-conversion,
                        crypto-api,
+                       random,
                        free,
                        http-api-data,
                        monad-logger,
@@ -37,6 +40,7 @@ library
                        persistent,
                        persistent-template,
                        servant-server,
+                       safe,
                        time,
                        text
   default-language:    Haskell2010

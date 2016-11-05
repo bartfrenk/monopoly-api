@@ -5,32 +5,34 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE TypeOperators #-}
 
-module API (module API, ClientError) where
+module API (module API, ActionErr) where
 
 import Servant
 
 import Models
-import Client
+import Actions
+import Game
 
-type SiteAPI = Get '[JSON] [Site] :<|>
-                   ReqBody '[JSON] [SiteDetails] :> Post '[JSON] [Token] :<|>
-                   Capture "location" Token
-                     :> "visit" :> Capture "team" Token
-                     :> Post '[JSON] VisitResult :<|>
-                   Capture "location" Token
-                     :> "buy" :> Capture "team" Token
-                     :> Capture "card" Token
-                     :> QueryParam "answer" Int
-                     :> Post '[JSON] BuyResult
+type SiteAPI = Get '[JSON] [SiteE]
+          :<|> ReqBody '[JSON] [SiteU] :> Post '[JSON] [SiteE]
+          :<|> Capture "siteT" SiteToken :>
+                  "visit" :> Capture "teamT" TeamToken
+                          :> Post '[JSON] VisitRes
+          :<|> Capture "siteT" SiteToken :>
+          "buy" :> Capture "teamT" TeamToken
+                          :> ReqBody '[JSON] BuyPermission
+                          :> Post '[JSON] BuyRes
 
-type TeamAPI = ReqBody '[JSON] TeamDetails :> Post '[JSON] Token
+type TeamAPI = ReqBody '[JSON] TeamU :> Post '[JSON] TeamE
+          :<|> Capture "teamT" TeamToken :> (
+                 "sync" :> ReqBody '[JSON] Location
+                        :> Post '[JSON] (Money, TeamStatus))
 
-type CardAPI = ReqBody '[JSON] [CardDetails] :> Post '[JSON] [Token]
+type QuestionAPI = ReqBody '[JSON] [QuestionU] :> Post '[JSON] [QuestionE]
 
-type MonopolyAPI =
-  "locations" :> SiteAPI :<|>
-  "teams" :> TeamAPI :<|>
-  "cards" :> CardAPI
+type MonopolyAPI = "locations" :> SiteAPI
+              :<|> "teams" :> TeamAPI
+              :<|> "questions" :> QuestionAPI
 
 api :: Proxy MonopolyAPI
 api = Proxy

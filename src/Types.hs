@@ -4,15 +4,24 @@
 module Types where
 
 import Data.Aeson
-import Data.ByteString
 import Data.Time.Clock
+import Data.Word
 import Database.Persist.TH
 import GHC.Generics
 
-type Currency = Int
+type Money = Int
+
 type Color = String
-type Token = ByteString
-type DieResult = Int
+
+type Token = Word64
+
+type SiteToken = Token
+
+type TeamToken = Token
+
+type QuestionToken = Token
+
+type AnswerIndex = Word
 
 data Location = Location {
   latitude :: Double,
@@ -20,25 +29,26 @@ data Location = Location {
   } deriving (Eq, Show, Read, Generic)
 
 instance FromJSON Location
+
 instance ToJSON Location
-derivePersistField "Location"
 
 data TeamStatus
   = ToJail
-  | ToStart Currency
+  | ToStart Money
   | InJail UTCTime
   | Free deriving (Eq, Show, Read, Generic)
 
 instance FromJSON TeamStatus
+
 instance ToJSON TeamStatus
-derivePersistField "TeamStatus"
 
 data UtilityType
   = Water
   | Electra deriving (Eq, Show, Read, Generic)
+
 instance FromJSON UtilityType
+
 instance ToJSON UtilityType
-derivePersistField "UtilityType"
 
 data SiteType
   = Street
@@ -53,4 +63,7 @@ instance FromJSON SiteType where
 instance ToJSON SiteType where
   toJSON = toJSON . show
 
+derivePersistField "Location"
+derivePersistField "TeamStatus"
+derivePersistField "UtilityType"
 derivePersistField "SiteType"

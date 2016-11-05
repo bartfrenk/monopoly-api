@@ -1,77 +1,99 @@
-{-# LANGUAGE DeriveFunctor #-}
+{-# LANGUAGE DeriveGeneric #-}
+{-# LANGUAGE RecordWildCards #-}
+
 module Game where
 
-import Control.Monad.Free
-
+import Control.Monad.Trans (MonadIO, liftIO)
+import Data.Maybe (fromJust)
+import Data.Aeson
+import Data.Time.Clock
+import Database.Persist.Sql
+import GHC.Generics
 import Models
+import System.Random (randomIO)
 
-data Account = TeamAcc Team | Bank
+data BuyPermission
+  = QuestionAnswer QuestionToken
+                   AnswerIndex
+  | NoQuestionToken Token
+  deriving (Eq, Show, Generic)
 
-data GameF token next
-  = CreateSite SiteDetails (token -> next)
-  | CreateTeam TeamDetails Currency (token -> next)
-  | CreateChanceCard CardDetails (token -> next)
-  | GetRent Site ((Currency, [DieResult]) -> next)
-  | Transfer Currency Account Account (Bool -> next)
-  | GetTeam token (Maybe Team -> next)
-  | GetChanceCard token (Maybe ChanceCard -> next)
-  | GetSite token (Maybe Site -> next)
-  | GetSites ([Site] -> next)
-  | DrawChanceCards Int ([ChanceResults] -> next)
-  | GetOwner Site (Maybe Team -> next)
-  | PutInJail Team next
-  | FreeFromJail Team (Team -> next) -- we need to recurse with the new value
-  | PayStartBonus Team next
-  | IsRepeatedVisit Site Team (Bool -> next) -- also stores visits
-  | MakeOwner Site Team next
-  deriving Functor
+instance FromJSON BuyPermission
 
-type GameAPI token = Free (GameF token)
+canBuy
+  :: MonadIO m
+  => BuyPermission -> SqlPersistT m Bool
+canBuy (NoQuestionToken _) = return True -- check if token was dispensed?
+canBuy (QuestionAnswer questionT given) = do
+  mquestionE <- getBy $ UniqueQuestionToken questionT
+  case mquestionE of
+    Nothing -> return False
+    Just questionE ->
+      let q = entityVal questionE
+      in return (questionAnswerIndex q == given)
 
-getTeam :: token -> GameAPI token (Maybe Team)
-getTeam teamTk = liftF $ GetTeam teamTk id
+refreshStatus :: UTCTime -> Team -> Team
+refreshStatus now team@Team {..} =
+  case teamStatus of
+    InJail start ->
+      if diffUTCTime now start > jailTime
+        then team
+             { teamStatus = Free
+             }
+        else team
+    _ -> team
 
-getSite :: token -> GameAPI token (Maybe Site)
-getSite siteTk = liftF $ GetSite siteTk id
+jailTime :: NominalDiffTime
+jailTime = 1000
 
-getSites :: GameAPI token [Site]
-getSites = liftF $ GetSites id
+startingMoney :: Money
+startingMoney = 1000
 
-getChanceCard :: token -> GameAPI token (Maybe ChanceCard)
-getChanceCard cardTk = liftF $ GetChanceCard cardTk id
+createTeam
+  :: MonadIO m
+  => TeamU -> m Team
+createTeam TeamU {..} = do
+  t <- liftIO randomIO
+  return
+    Team
+    { teamName = name
+    , teamToken = t
+    , teamMoney = startingMoney
+    , teamStatus = Free
+    }
 
-isRepeatedVisit :: Site -> Team -> GameAPI token Bool
-isRepeatedVisit site team = liftF $ IsRepeatedVisit site team id
+createSite
+  :: MonadIO m
+  => SiteU -> m Site
+createSite SiteU {..} = do
+  t <- liftIO randomIO
+  return
+    Site
+    { siteName = name
+    , siteToken = t
+    , siteLocation = location
+    , siteType = siteType_
+    , siteColor = color
+    , sitePrice = price
+    , siteOwnerId = Nothing
+    }
 
-getRent :: Site -> GameAPI token (Currency, [DieResult])
-getRent site = liftF $ GetRent site id
-
-transfer :: Currency -> Account -> Account -> GameAPI token Bool
-transfer amount src dest = liftF $ Transfer amount src dest id
-
-makeOwner :: Site -> Team -> GameAPI token ()
-makeOwner site team = liftF $ MakeOwner site team ()
-
-getOwner :: Site -> GameAPI token (Maybe Team)
-getOwner site = liftF $ GetOwner site id
-
-createSite :: SiteDetails -> GameAPI token token
-createSite site = liftF $ CreateSite site id
-
-createTeam :: TeamDetails -> Currency -> GameAPI token token
-createTeam team funds = liftF $ CreateTeam team funds id
-
-putInJail :: Team -> GameAPI token ()
-putInJail team = liftF $ PutInJail team ()
-
-payStartBonus :: Team -> GameAPI token ()
-payStartBonus team = liftF $ PayStartBonus team ()
-
-freeFromJail :: Team -> GameAPI token Team
-freeFromJail team = liftF $ FreeFromJail team id
-
-drawChanceCards :: Int -> GameAPI token [ChanceResults]
-drawChanceCards count = liftF $ DrawChanceCards count id
-
-createChanceCard :: CardDetails -> GameAPI token token
-createChanceCard card = liftF $ CreateChanceCard card id
+createQuestion
+  :: MonadIO m
+  => QuestionU -> SqlPersistT m Question
+createQuestion QuestionU {..} = do
+  siteId <-
+    case site of
+      Nothing -> return Nothing
+      Just siteName -> do
+        siteE <- getBy $ UniqueSiteName siteName
+        return $ Just . entityKey . fromJust $ siteE
+  t <- liftIO randomIO
+  return
+    Question
+    { questionPhrase = phrase
+    , questionToken = t
+    , questionSiteId = siteId
+    , questionOptions = options
+    , questionAnswerIndex = answerIndex
+    }

@@ -1,5 +1,6 @@
 {-# LANGUAGE FlexibleInstances #-}
-{-# LANGUAGE EmptyDataDecls #-} {-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE EmptyDataDecls #-}
+{-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
@@ -11,112 +12,113 @@
 {-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE DeriveGeneric #-}
 
-module Models (module Models, module Types) where
+module Models
+  ( module Models
+  , module Types
+  ) where
 
-import Database.Persist.TH
-import Data.Time.Clock (UTCTime)
-import Data.ByteString.Char8 (pack)
 import Data.Aeson
+import Data.ByteString.Char8 (pack)
+import Data.Time.Clock (UTCTime)
+import Database.Persist
+import Database.Persist.TH
 import GHC.Generics
-
-import Orphans()
-
+import Orphans ()
 import Types
 
-share [mkPersist sqlSettings, mkMigrate "migrateAll"] [persistLowerCase|
+share
+  [mkPersist sqlSettings, mkMigrate "migrateAll"]
+  [persistLowerCase|
 Team json
   name String
   UniqueTeamName name
-  token Token
+  token TeamToken
   UniqueTeamToken token
-  wallet Currency
+  money Money
   status TeamStatus
   deriving Show
+  deriving Eq
 
 Site json
   name String
-  token Token
+  UniqueSiteName name
+  token SiteToken
+  UniqueSiteToken token
   location Location
   type SiteType
   color Color
-  owner Token Maybe
-  price Currency Maybe
-  UniqueSiteToken token
-  UniqueSiteName name
+  ownerId TeamId Maybe
+  price Money Maybe
   deriving Show
+  deriving Eq
 
 Visit
   when UTCTime
-  locationToken Token
-  teamToken Token
-
-ChanceCard
-  token Token
-  UniqueCardToken token
-  question String
-  UniqueQuestion question
-  options [String]
-  siteToken Token Maybe
-  answer Int
+  siteId SiteId
+  teamId TeamId
   deriving Show
+  deriving Eq
+
+Question json
+  phrase String
+  UniquePhrase phrase
+  token QuestionToken
+  UniqueQuestionToken token
+  options [String]
+  siteId SiteId Maybe
+  answerIndex AnswerIndex
+  deriving Show
+  deriving Eq
+
+TeamLocation
+  teamId TeamId
+  location Location
 |]
 
-instance Eq Team where
-  team1 == team2 = teamToken team1 == teamToken team2
+type TeamE = Entity Team
 
-createTeam :: String -> Team
-createTeam name' =
-  Team name' (pack name') 1000 Free
+type SiteE = Entity Site
 
-instance Eq Site where
-  site1 == site2 = siteToken site1 == siteToken site2
+type QuestionE = Entity Question
 
-instance Eq ChanceCard where
-  card1 == card2 = chanceCardToken card1 == chanceCardToken card2
+data TeamU = TeamU
+  { name :: String
+  } deriving (Eq, Show, Generic)
 
-createStreet :: String -> Location -> Color -> Currency -> Site
-createStreet name' location color price =
-  Site name' (pack name') location Street color Nothing (Just price)
+instance FromJSON TeamU
 
-data TeamDetails = TeamDetails {
-  name :: String
-} deriving (Show, Generic)
+data SiteU = SiteU
+  { name :: String
+  , location :: Location
+  , siteType_ :: SiteType
+  , color :: Color
+  , price :: Maybe Money
+  } deriving (Eq, Show, Generic)
 
-instance ToJSON TeamDetails
-instance FromJSON TeamDetails
+instance FromJSON SiteU
 
-data SiteDetails = SiteDetails {
-  name :: String,
-  location :: Location,
-  sitetype :: SiteType,
-  color :: Color,
-  price :: Maybe Currency
-} deriving (Show, Generic)
+data QuestionU = QuestionU
+  { phrase :: String
+  , options :: [String]
+  , site :: Maybe String
+  , answerIndex :: AnswerIndex
+  } deriving (Eq, Show, Generic)
 
--- TODO: no automatic deriving here
-instance ToJSON SiteDetails
-instance FromJSON SiteDetails
+instance FromJSON QuestionU
 
-data CardDetails = CardDetails {
-  question :: String,
-  options :: [String],
-  cardSiteName :: Maybe String,
-  answer :: Int
-} deriving (Show, Generic)
+data QuestionD = QuestionD
+  { phrase :: String
+  , option :: [String]
+  , token :: QuestionToken
+  } deriving (Eq, Show, Generic)
 
-data ChanceResults
+instance ToJSON QuestionD
+
+data ChanceCard
   = GoToJail
-  | GoToStart Currency
-  | Question [String] Token
+  | GoToStart Money
+  | NoQuestion Token
+  | Q QuestionD
   deriving (Show, Eq, Generic)
 
-instance ToJSON ChanceResults
-
-instance ToJSON CardDetails
-instance FromJSON CardDetails
-
-isCorrectAnswer :: ChanceCard -> Maybe Int -> Bool
-isCorrectAnswer ChanceCard{..} manswer =
-  case manswer of
-    Nothing -> True
-    Just answer -> chanceCardAnswer == answer
+instance ToJSON ChanceCard

@@ -1,4 +1,9 @@
+{-# LANGUAGE RankNTypes #-}
+{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE TypeSynonymInstances #-}
 {-# LANGUAGE FlexibleContexts #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE NoImplicitPrelude #-}
 
 module Main where
 
@@ -7,16 +12,19 @@ import Control.Monad.Logger
 import Control.Monad.Trans.Control (MonadBaseControl)
 import Network.Wai.Handler.Warp (run)
 
+import Data.Text.Lazy.Encoding (encodeUtf8)
 import Database.Persist.Postgresql
 import Data.ByteString (ByteString)
 import Data.ByteString.Char8 (pack)
 import qualified Data.ByteString.Lazy.Char8 as Lazy
 import Servant
 import Text.Printf
+import BasicPrelude hiding (encodeUtf8)
 
 import API
 import Models
-import Handlers
+import Game
+import Actions
 
 main :: IO ()
 main = do
@@ -24,47 +32,38 @@ main = do
   printf "Monopoly server running on port %d\n" tcpPort
   run tcpPort $ serve api (server postgres)
 
-siteAPI :: Proxy SiteAPI
-siteAPI = Proxy
-
 postgres :: ByteString
 postgres =
-  pack
-    "host=localhost \
+  "host=localhost \
                 \port=8001 \
                 \user=monopoly \
                 \password=monopoly \
                 \dbname=monopoly"
 
-type HandlerM = SqlPersistT (LoggingT (ExceptT (ClientError Token) IO))
+type HandlerM = SqlPersistT ActionM
 
--- TODO: more specific
-toServantErr :: ClientError Token -> ServantErr
-toServantErr err = err404 { errBody = Lazy.pack . show $ err }
-
--- TODO: refactor
-server :: ByteString -> Server MonopolyAPI
-server connStr = siteServer :<|> teamServer :<|> cardServer
+toHandler :: ByteString -> LogLevel -> HandlerM a -> Handler a
+toHandler connStr minLvl = translateErr . runLogging . runDb
   where
-    siteServer = enter (Nat f) $
-      handleListSites :<|>
-      handleNewSites :<|>
-      handleVisit :<|>
-      handleBuy
-    teamServer = enter (Nat f) handleNewTeam
-    cardServer :: [CardDetails] -> Handler [Token]
-    cardServer = enter (Nat f) handleNewChanceCards
-    filt = filterLogger (\_ lvl -> lvl > LevelDebug)
-    f :: HandlerM a -> Handler a
-    f =  withExceptT toServantErr . runStdoutLoggingT . filt . runPostgreSql connStr 10
+    translateErr = withExceptT toServantErr
+    filterLogs = filterLogger (\_ lvl -> lvl >= minLvl)
+    toServantErr e =
+      err404
+      { errBody = Lazy.pack $ show e
+      }
+    runLogging = runStdoutLoggingT . filterLogs
+    runDb = withPostgresqlPool connStr 10 . runSqlPool
+
+server :: ByteString -> Server MonopolyAPI
+server connStr = enter nat $ siteServer :<|> teamServer :<|> questionServer
+  where
+    nat = Nat $ toHandler connStr LevelDebug
+    siteServer = listSites :<|> newSites :<|> visit :<|> buy
+    teamServer = newTeam :<|> syncTeam
+    questionServer = newQuestions
 
 tcpPort :: Int
 tcpPort = 8000
-
-runPostgreSql
-  :: (MonadIO m, MonadBaseControl IO m, MonadLogger m)
-  => ByteString -> Int -> SqlPersistT m a -> m a
-runPostgreSql connStr pools = withPostgresqlPool connStr pools . runSqlPool
 
 migratePostgreSql :: IO ()
 migratePostgreSql =

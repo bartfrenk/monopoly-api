@@ -28,9 +28,16 @@ load-questions: target/samples/questions.json
 	curl ${SERVER_ADDRESS}/cards -H 'Content-Type: application/json' \
 		 -d @$<
 
+load-team: # Loads a team into the server.
 load-team: target/samples/team-1.json
 	curl ${SERVER_ADDRESS}/teams -H 'Content-Type: application/json' \
 		 -d @$<
+
+load-all: ## Loads all resources into the server.
+load-all: load-locations load-questions load-team
+
+do-visit:
+	curl -X 'POST' ${SERVER_ADDRESS}/locations/${location}/visit/${team}
 
 build-all: ## Build everything
 build-all: build-server build-docs
