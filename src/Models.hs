@@ -129,11 +129,19 @@ instance FromJSON QuestionU
 
 data QuestionD = QuestionD
   { phrase :: String
-  , option :: [String]
+  , options :: [String]
   , token :: QuestionToken
   } deriving (Eq, Show, Generic)
 
 instance ToJSON QuestionD
+
+toQuestionD :: Question -> QuestionD
+toQuestionD Question {..} =
+  QuestionD
+  { phrase = questionPhrase
+  , options = questionOptions
+  , token = questionToken
+  }
 
 data ChanceCard
   = GoToJail

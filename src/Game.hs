@@ -72,8 +72,11 @@ computeRent Site {..} = do
 
 drawChanceCards
   :: MonadIO m
-  => Word -> Maybe SiteE -> SqlPersistT m [ChanceCard]
-drawChanceCards = undefined
+  => Int -> Maybe SiteE -> SqlPersistT m [ChanceCard]
+drawChanceCards limit _ = do
+  cardsE <- selectList [] [LimitTo limit]
+  return $ (Q . toQuestionD . entityVal) `fmap` cardsE
+
 
 canBuy
   :: MonadIO m
