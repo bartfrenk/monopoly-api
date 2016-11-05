@@ -1,22 +1,22 @@
-- question: When was the Parktheater founded?
+- phrase: When was the Parktheater founded?
   options:
     - 1 year ago
     - 2 years ago
     - 3 years ago
     - 10 years ago
-  answer: 0
-  cardSiteName: Parktheater
+  answerIndex: 0
+  site: Parktheater
 
-- question: How old is Sinterklaas?
+- phrase: How old is Sinterklaas?
   options:
     - 100 years old
     - 200 years old
     - 300 years old
-  answer: 2
+  answerIndex: 2
 
-- question: Illegal question
+- phrase: Illegal question
   options:
     - bla
     - why?
-  cardSiteName: Parktheater
-  answer: 1
+  site: Parktheater
+  answerIndex: 1
