@@ -23,6 +23,8 @@ type QuestionToken = Token
 
 type AnswerIndex = Word
 
+type DieResult = Int
+
 data Location = Location {
   latitude :: Double,
   longitude :: Double

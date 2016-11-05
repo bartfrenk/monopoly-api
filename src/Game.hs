@@ -20,6 +20,61 @@ data BuyPermission
 
 instance FromJSON BuyPermission
 
+-- REVIEW: candidate for refactoring
+computeRent
+  :: MonadIO m
+  => Site -> SqlPersistT m (Money, [DieResult])
+computeRent Site {..} = do
+  let ownerId = fromJust siteOwnerId
+  case siteSiteType of
+    Street -> do
+      (owned, total) <- getTotalStreetOwned ownerId siteColor
+      let price = fromJust sitePrice
+      return (computeStreetRent price owned total, [])
+    Utility _ -> do
+      owned <- getTotalUtilityOwned ownerId
+      let dieResult = 3
+      return (computeUtilityRent owned dieResult, [dieResult])
+    Station -> do
+      owned <-
+        selectList [SiteOwnerId ==. Just ownerId, SiteSiteType ==. Station] []
+      return (computeStationRent (length owned), [])
+    _ -> return (0, [])
+  where
+    getTotalStreetOwned
+      :: MonadIO m
+      => TeamId -> Color -> SqlPersistT m (Int, Int)
+    getTotalStreetOwned teamId color = do
+      sameColor <- selectList [SiteColor ==. color] []
+      owned <- selectList [SiteColor ==. color, SiteOwnerId ==. Just teamId] []
+      return (length sameColor, length owned)
+    computeStreetRent :: Money -> Int -> Int -> Money
+    computeStreetRent price total owned -- TODO: what should this be?
+     = floor (toRational (price * owned) / toRational total)
+    getTotalUtilityOwned
+      :: MonadIO m
+      => TeamId -> SqlPersistT m Int
+    getTotalUtilityOwned teamId = do
+      owned <-
+        selectList
+          ([SiteSiteType ==. Utility Water, SiteOwnerId ==. Just teamId] ||.
+           [SiteSiteType ==. Utility Electra, SiteOwnerId ==. Just teamId])
+          []
+      return $ length owned
+    computeUtilityRent :: Int -> Int -> Money
+    computeUtilityRent owned dieResult =
+      case owned of
+        0 -> 0
+        1 -> 4 * dieResult
+        _ -> 10 * dieResult
+    computeStationRent :: Int -> Money
+    computeStationRent _ = 12 -- TODO: what should this be?
+
+drawChanceCards
+  :: MonadIO m
+  => Word -> Maybe SiteE -> SqlPersistT m [ChanceCard]
+drawChanceCards = undefined
+
 canBuy
   :: MonadIO m
   => BuyPermission -> SqlPersistT m Bool

@@ -32,7 +32,7 @@ data VisitRes
   | IllegalVisitWhileInJail
   | PayedRent Money
               Team
-              [Word]
+              [DieResult]
   | TeamPutInJail UTCTime
   | RepeatedVisit
   | NoVisitResult
@@ -92,7 +92,7 @@ visit siteT teamT = do
                   (InJail _, Jail, _) -> return NoVisitResult
                   (InJail _, _, _) -> return IllegalVisitWhileInJail
                   (Free, _, Just price) -> do
-                    mownerE <- getOwner siteE
+                    mownerE <- getOwner site
                     case mownerE of
                       Nothing ->
                         if price <= teamMoney team
@@ -101,7 +101,7 @@ visit siteT teamT = do
                             return $ PickCard chanceCards
                           else return InsufficientMoneyToBuy
                       Just ownerE -> do
-                        (rent, dice) <- computeRent siteE
+                        (rent, dice) <- computeRent site
                         if rent <= teamMoney team
                           then do
                             _ <- update (entityKey ownerE) [TeamMoney +=. rent]
@@ -132,14 +132,13 @@ visit siteT teamT = do
       return now
     getOwner
       :: MonadIO m
-      => SiteE -> SqlPersistT m (Maybe TeamE)
-    getOwner = undefined
-    drawChanceCards
-      :: MonadIO m
-      => Word -> Maybe SiteE -> SqlPersistT m [ChanceCard]
-    drawChanceCards = undefined
-    computeRent :: MonadIO m => SiteE -> SqlPersistT m (Money, [Word])
-    computeRent = undefined
+      => Site -> SqlPersistT m (Maybe TeamE)
+    getOwner Site {..} = do
+      case siteOwnerId of
+        Nothing -> return Nothing
+        Just ownerId' -> do
+          mteam <- get ownerId'
+          return $ Entity ownerId' `fmap` mteam
 
 buy
   :: MonadAction m
