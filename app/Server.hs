@@ -55,9 +55,13 @@ server :: ByteString -> Server MonopolyAPI
 server connStr = enter nat $ siteServer :<|> teamServer :<|> questionServer
   where
     nat = Nat $ toHandler connStr LevelDebug
-    siteServer = listSites :<|> newSites :<|> visit :<|> buy
-    teamServer = newTeam :<|> syncTeam
-    questionServer = newQuestions
+    siteServer = listSites :<|> succeed :<|> -- hack to get OPTIONS endpoints!
+                 newSites :<|> succeed :<|>
+                 visit :<|> visitOption :<|>
+                 buy :<|> buyOption
+    teamServer = newTeam :<|> succeed :<|>
+                 syncTeam :<|> syncOption
+    questionServer = newQuestions :<|> succeed
 
 tcpPort :: Int
 tcpPort = 8000
@@ -67,3 +71,17 @@ migratePostgreSql =
   runStderrLoggingT $
   withPostgresqlPool postgres 10 $
   \pool -> liftIO $ runSqlPersistMPool (runMigration migrateAll) pool
+
+
+succeed :: HandlerM NoContent
+succeed = return NoContent
+
+visitOption :: SiteToken -> TeamToken -> HandlerM NoContent
+visitOption _ _ = return NoContent
+
+buyOption :: SiteToken -> TeamToken -> HandlerM NoContent
+buyOption _ _ = return NoContent
+
+syncOption :: TeamToken -> HandlerM NoContent
+syncOption _ = return NoContent
+

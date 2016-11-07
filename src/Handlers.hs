@@ -58,6 +58,7 @@ data ActionErr
 class (MonadIO m, MonadError ActionErr m, MonadLogger m) =>
       MonadAction m
 
+
 visit
   :: MonadAction m
   => SiteToken -> TeamToken -> SqlPersistT m VisitRes

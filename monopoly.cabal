@@ -47,6 +47,7 @@ executable monopoly-server
   build-depends:       base,
                        basic-prelude,
                        bytestring,
+                       http-types,
                        monad-control,
                        monad-logger,
                        monopoly,
@@ -54,6 +55,7 @@ executable monopoly-server
                        persistent-postgresql,
                        servant-server,
                        wai-cors,
+                       wai,
                        warp
   default-language:    Haskell2010
 
