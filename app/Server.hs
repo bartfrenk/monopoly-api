@@ -17,6 +17,7 @@ import qualified Data.ByteString.Lazy.Char8 as Lazy
 import Servant
 import Text.Printf
 import BasicPrelude hiding (encodeUtf8)
+import Network.Wai.Middleware.Cors
 
 import API
 import Models
@@ -26,7 +27,7 @@ main :: IO ()
 main = do
   migratePostgreSql
   printf "Monopoly server running on port %d\n" tcpPort
-  run tcpPort $ serve api (server postgres)
+  run tcpPort $ simpleCors $ serve api (server postgres)
 
 postgres :: ByteString
 postgres =

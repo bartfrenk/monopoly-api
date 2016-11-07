@@ -53,6 +53,7 @@ executable monopoly-server
                        mtl,
                        persistent-postgresql,
                        servant-server,
+                       wai-cors,
                        warp
   default-language:    Haskell2010
 
