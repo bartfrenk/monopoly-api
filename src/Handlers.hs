@@ -58,7 +58,6 @@ data ActionErr
 class (MonadIO m, MonadError ActionErr m, MonadLogger m) =>
       MonadAction m
 
-
 visit
   :: MonadAction m
   => SiteToken -> TeamToken -> SqlPersistT m VisitRes
@@ -116,11 +115,13 @@ visit siteT teamT = do
     isRepeatedVisit siteE teamE = do
       lastVisit <- getLastVisit teamE
       return $ (Just $ entityVal siteE) == lastVisit
-    getLastVisit :: MonadIO m
-              => TeamE -> SqlPersistT m (Maybe Site)
+    getLastVisit
+      :: MonadIO m
+      => TeamE -> SqlPersistT m (Maybe Site)
     getLastVisit teamE = do
       let teamId = entityKey teamE
-      ordVisitsE <- selectList [VisitTeamId ==. teamId] [Desc VisitWhen, LimitTo 1]
+      ordVisitsE <-
+        selectList [VisitTeamId ==. teamId] [Desc VisitWhen, LimitTo 1]
       case ordVisitsE of
         [] -> return Nothing
         (visitE:_) -> get (visitSiteId . entityVal $ visitE)
@@ -221,18 +222,9 @@ syncTeam teamT loc = do
   mteamE <- getBy $ UniqueTeamToken teamT
   case mteamE of
     Nothing -> throwError $ TeamNotFound teamT
-    Just teamE -> do
-      -- TODO: TeamLocation needs timestamp
+    Just teamE
+    -- TODO: TeamLocation needs timestamp
+     -> do
       _ <- insert $ TeamLocation (entityKey teamE) loc
       team <- updateTeam teamE
       return (teamMoney team, teamStatus team)
-
-updateTeam
-  :: MonadAction m
-  => TeamE -> SqlPersistT m Team
-updateTeam teamE = do
-  let team = entityVal teamE
-  now <- liftIO getCurrentTime
-  let team' = refreshStatus now team
-  when (team' /= team) $ replace (entityKey teamE) team
-  return team'

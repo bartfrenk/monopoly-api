@@ -3,9 +3,10 @@
 
 module Game where
 
+import Control.Monad (when)
 import Control.Monad.Trans (MonadIO, liftIO)
-import Data.Maybe (fromJust)
 import Data.Aeson
+import Data.Maybe (fromJust)
 import Data.Time.Clock
 import Database.Persist.Sql
 import GHC.Generics
@@ -76,7 +77,6 @@ drawChanceCards
 drawChanceCards limit _ = do
   cardsE <- selectList [] [LimitTo limit]
   return $ (Q . toQuestionD . entityVal) `fmap` cardsE
-
 
 canBuy
   :: MonadIO m
@@ -155,3 +155,13 @@ createQuestion QuestionU {..} = do
     , questionOptions = options
     , questionAnswerIndex = answerIndex
     }
+
+updateTeam
+  :: MonadIO m
+  => TeamE -> SqlPersistT m Team
+updateTeam teamE = do
+  let team = entityVal teamE
+  now <- liftIO getCurrentTime
+  let team' = refreshStatus now team
+  when (team' /= team) $ replace (entityKey teamE) team
+  return team'
