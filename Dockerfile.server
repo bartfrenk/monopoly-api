@@ -1,0 +1,4 @@
+FROM fpco/stack-run
+MAINTAINER bart.frenk@gmail.command
+ADD target/bin /usr/local/bin
+CMD /usr/local/bin/monopoly-server

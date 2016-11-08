@@ -40,8 +40,8 @@ customCors = cors (const $ Just customCorsResourcePolicy)
 
 postgres :: ByteString
 postgres =
-  "host=localhost \
-                \port=8001 \
+  "host=db \
+                \port=5432 \
                 \user=monopoly \
                 \password=monopoly \
                 \dbname=monopoly"

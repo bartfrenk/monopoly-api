@@ -34,11 +34,9 @@ RUN /etc/init.d/postgresql start && \
 psql --command "CREATE USER monopoly WITH PASSWORD 'monopoly';" && \
 createdb -O monopoly monopoly -E UTF-8 -T template0
 
-# Expose the PostgreSQL port.
-EXPOSE 5432
-
 # Backup config, logs and databases to Docker volumes.
-VOLUME  ["/etc/postgresql", "/var/log/postgresql", "/var/lib/postgresql"]
+# VOLUME  ["/etc/postgresql", "/var/log/postgresql", "/var/lib/postgresql"]
+
 
 # Default command is to start the postgres server with specified data dir.
 CMD ["/usr/lib/postgresql/9.5/bin/postgres", \
