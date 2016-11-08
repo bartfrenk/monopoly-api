@@ -55,7 +55,7 @@
     longitude: 5.4813
 
 - name: Centrale Essent Beukenlaan
-  siteType: Utility
+  siteType: Utility Electra
   color: White
   price: 10
   location:
