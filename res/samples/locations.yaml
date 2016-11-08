@@ -1,31 +1,119 @@
-- name: Jail
-  siteType: Jail
+- name: Heuvel Gallerie
+  siteType: Street
+  color: Brown
+  price: 10
+  location:
+    latitude: 51.4383
+    longitude: 5.4806
+
+- name: Woenselse Markt
+  siteType: Street
+  color: Brown
+  price: 10
+  location:
+    latitude: 51.4513
+    longitude: 5.4717
+
+- name: NS Station Eindhoven
+  siteType: Station
   color: Black
+  price: 10
   location:
-    latitude: 12.2
-    longitude: 23.2
+    latitude: 51.4422
+    longitude: 5.4799
 
-- name: Witte Dame
+- name: St. Catharina kerk
   siteType: Street
-  color: Yellow
-  price: 20
+  color: LightBlue
+  price: 10
   location:
-    latitude: 31.4
-    longitude: 24.4
+    latitude: 51.4371
+    longitude: 5.4796
 
-- name: Parktheater
+- name: Steentjeskerk
   siteType: Street
-  price: 40
-  color: Blue
+  color: LightBlue
+  price: 10
   location:
-    latitude: 31.4
-    longitude: 24.4
+    latitude: 51.4395
+    longitude: 5.4678
 
-- name: Stadswandelpark
+- name: Evoluon
   siteType: Street
-  price: 80
-  color: Blue
+  color: LightBlue
+  price: 10
   location:
-    latitude: 31.5
-    longitude: 36
+    latitude: 51.4438
+    longitude: 5.4468
 
+- name: Fontys Campus Rachelsmolen
+  siteType: Street
+  color: Purple
+  price: 10
+  location:
+    latitude: 51.4516
+    longitude: 5.4813
+
+- name: Centrale Essent Beukenlaan
+  siteType: Utility
+  color: White
+  price: 10
+  location:
+    latitude: 51.4489
+    longitude: 5.4538
+
+- name: Limbopad
+  siteType: Street
+  color: Purple
+  price: 10
+  location:
+    latitude: 51.4458
+    longitude: 5.4832
+
+- name: GreenHouse Group
+  siteType: Street
+  color: Purple
+  price: 10
+  location:
+    latitude: 51.4402
+    longitude: 5.4763
+
+- name: Busstation Woensel XL
+  siteType: Station
+  color: Black
+  price: 10
+  location:
+    latitude: 51.4670
+    longitude: 5.4754
+
+#- name: Jail
+#  siteType: Jail
+#  color: Black
+#  location:
+#    latitude: 12.2
+#    longitude: 23.2
+#
+#- name: Witte Dame
+#  siteType: Street
+#  color: Yellow
+#  price: 20
+#  location:
+#    latitude: 31.4
+#    longitude: 24.4
+#
+#- name: Parktheater
+#  siteType: Street
+#  price: 40
+#  color: Blue
+#  location:
+#    latitude: 31.4
+#    longitude: 24.4
+#
+#- name: Stadswandelpark
+#  siteType: Street
+#  price: 80
+#  color: Blue
+#  location:
+#    latitude: 31.5
+#    longitude: 36
+#
