@@ -18,6 +18,7 @@ import Servant
 import Text.Printf
 import BasicPrelude hiding (encodeUtf8)
 import Network.Wai.Middleware.Cors
+import qualified Network.Wai as Wai
 
 import API
 import Models
@@ -27,7 +28,15 @@ main :: IO ()
 main = do
   migratePostgreSql
   printf "Monopoly server running on port %d\n" tcpPort
-  run tcpPort $ simpleCors $ serve api (server postgres)
+  run tcpPort $ customCors $ serve api (server postgres)
+
+customCors :: Wai.Middleware
+customCors = cors (const $ Just customCorsResourcePolicy)
+  where
+    customCorsResourcePolicy =
+      simpleCorsResourcePolicy
+      { corsRequestHeaders = simpleHeaders
+      }
 
 postgres :: ByteString
 postgres =
@@ -55,12 +64,15 @@ server :: ByteString -> Server MonopolyAPI
 server connStr = enter nat $ siteServer :<|> teamServer :<|> questionServer
   where
     nat = Nat $ toHandler connStr LevelDebug
-    siteServer = listSites :<|> succeed :<|> -- hack to get OPTIONS endpoints!
-                 newSites :<|> succeed :<|>
-                 visit :<|> visitOption :<|>
-                 buy :<|> buyOption
-    teamServer = newTeam :<|> succeed :<|>
-                 syncTeam :<|> syncOption
+    siteServer =
+      listSites :<|> succeed :<|> -- hack to get OPTIONS endpoints!
+      newSites :<|>
+      succeed :<|>
+      visit :<|>
+      visitOption :<|>
+      buy :<|>
+      buyOption
+    teamServer = newTeam :<|> succeed :<|> syncTeam :<|> syncOption
     questionServer = newQuestions :<|> succeed
 
 tcpPort :: Int
@@ -71,7 +83,6 @@ migratePostgreSql =
   runStderrLoggingT $
   withPostgresqlPool postgres 10 $
   \pool -> liftIO $ runSqlPersistMPool (runMigration migrateAll) pool
-
 
 succeed :: HandlerM NoContent
 succeed = return NoContent
@@ -84,4 +95,3 @@ buyOption _ _ = return NoContent
 
 syncOption :: TeamToken -> HandlerM NoContent
 syncOption _ = return NoContent
-

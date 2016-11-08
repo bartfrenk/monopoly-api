@@ -95,4 +95,13 @@ target/samples:
 	@mkdir -p target/samples
 
 
+experiment-cors:
+	curl -H "Origin: http://example.com" \
+		 -H "Accept: */*" \
+		 -H "Accept-Encoding: gzip, deflate, sdch" \
+		 -H "Access-Control-Request-Headers: content-type" \
+		 -H "Access-Control-Request-Method: POST" \
+		 =H "Origin: http://localhost:4000" \
+		 -X OPTIONS --verbose \
+		 "${SERVER_ADDRESS}/locations"
 
