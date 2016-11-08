@@ -16,7 +16,10 @@ help: ## Show this help.
 build-all: ## Build everything
 build-all: build-docker build-docs
 
-build-docker: target/bin/monopoly-server
+build-docker:
+	mkdir -p target/bin
+	stack build
+	stack install
 	docker-compose build
 
 build-docs: ## Generate html documentation
@@ -75,12 +78,6 @@ target/docs:
 
 target/samples:
 	@mkdir -p target/samples
-
-target/bin/monopoly-server: target/bin
-	stack install
-
-target/bin:
-	mkdir -p target/bin
 
 ##
 
