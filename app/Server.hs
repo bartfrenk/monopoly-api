@@ -57,7 +57,7 @@ toHandler connStr minLvl = translateErr . runLogging . runDb
       err404
       { errBody = Lazy.pack $ show e
       }
-    runLogging = runStdoutLoggingT . filterLogs
+    runLogging = runStderrLoggingT . filterLogs
     runDb = withPostgresqlPool connStr 10 . runSqlPool
 
 server :: ByteString -> Server MonopolyAPI

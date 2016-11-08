@@ -63,7 +63,7 @@ visit
   :: MonadAction m
   => SiteToken -> TeamToken -> SqlPersistT m VisitRes
 visit siteT teamT = do
-  logDebugN $ unwords [tshow siteT, tshow teamT]
+  logInfoN $ unwords ["visit", tshow siteT, tshow teamT]
   msiteE <- getBy $ UniqueSiteToken siteT
   mteamE <- getBy $ UniqueTeamToken teamT
   case (msiteE, mteamE) of
@@ -134,7 +134,7 @@ visit siteT teamT = do
     getOwner
       :: MonadIO m
       => Site -> SqlPersistT m (Maybe TeamE)
-    getOwner Site {..} = do
+    getOwner Site {..} =
       case siteOwnerId of
         Nothing -> return Nothing
         Just ownerId' -> do
@@ -145,7 +145,7 @@ buy
   :: MonadAction m
   => SiteToken -> TeamToken -> BuyPermission -> SqlPersistT m BuyRes
 buy siteT teamT perm = do
-  logDebugN $ unwords [tshow siteT, tshow teamT, tshow perm]
+  logInfoN $ unwords ["buy", tshow siteT, tshow teamT, tshow perm]
   allowed <- canBuy perm
   if not allowed
     then return WrongAnswerGiven
@@ -177,12 +177,16 @@ buy siteT teamT perm = do
 newTeam
   :: MonadAction m
   => TeamU -> SqlPersistT m TeamE
-newTeam teamU = createTeam teamU >>= insertEntity
+newTeam teamU = do
+  logInfoN $ unwords ["newTeam", tshow teamU]
+  createTeam teamU >>= insertEntity
 
 newSites
   :: MonadAction m
   => [SiteU] -> SqlPersistT m [SiteE]
-newSites = mapM newSite
+newSites sitesU = do
+  logInfoN $ unwords ["newSites", tshow $ length sitesU]
+  mapM newSite sitesU
   where
     newSite
       :: MonadAction m
@@ -192,7 +196,9 @@ newSites = mapM newSite
 newQuestions
   :: MonadAction m
   => [QuestionU] -> SqlPersistT m [QuestionE]
-newQuestions = mapM newQuestion
+newQuestions questionsU = do
+  logInfoN $ unwords ["newQuestions", tshow $ length questionsU]
+  mapM newQuestion questionsU
   where
     newQuestion
       :: MonadAction m
@@ -203,6 +209,7 @@ listSites
   :: MonadAction m
   => SqlPersistT m [SiteD]
 listSites = do
+  logInfoN $ unwords ["listSites"]
   sitesE <- selectList [] []
   return $ (toSiteD . entityVal) `fmap` sitesE
 
@@ -210,6 +217,7 @@ syncTeam
   :: MonadAction m
   => TeamToken -> Location -> SqlPersistT m (Money, TeamStatus)
 syncTeam teamT loc = do
+  logInfoN $ unwords ["syncTeam", tshow teamT, tshow loc]
   mteamE <- getBy $ UniqueTeamToken teamT
   case mteamE of
     Nothing -> throwError $ TeamNotFound teamT
