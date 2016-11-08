@@ -1,0 +1,8 @@
+
+* DONE Run server in Docker file
+  CLOSED: [2016-11-08 Tue 23:09]
+* TODO Allow up to a fixed number of teams
+* TODO Update team status on visit
+* TODO Avoid paying double rent
+Need to store transactions
+* TODO Implement drawing chance cards
