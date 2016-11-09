@@ -86,6 +86,94 @@
     latitude: 51.4670
     longitude: 5.4754
 
+- name: Philips van Lenneppark
+  siteType: Street
+  color: Orange
+  price: 10
+  location:
+    latitude: 51.4463
+    longitude: 5.4319
+
+- name: 18 septemberplein
+  siteType: Street
+  color: Orange
+  price: 10
+  location:
+    latitude: 51.4413
+    longitude: 5.4771
+
+- name: Parktheater
+  siteType: Street
+  color: Orange
+  price: 10
+  location:
+    latitude: 51.4291
+    longitude: 5.4842
+
+- name: PSV Stadion
+  siteType: Street
+  color: Red
+  price: 10
+  location:
+    latitude: 51.4413
+    longitude: 5.4689
+
+- name: Golfbaan- / Club Welschap
+  siteType: Street
+  color: Red
+  price: 10
+  location:
+    latitude: 51.4464
+    longitude: 5.4215
+
+- name: Fit all day Eindhoven
+  siteType: Street
+  color: Red
+  price: 10
+  location:
+    latitude: 51.4409
+    longitude: 5.4793
+
+- name: NS Station Strijp S
+  siteType: Station
+  color: Black
+  price: 10
+  location:
+    latitude: 51.4501
+    longitude: 5.4570
+
+- name: Effenaar
+  siteType: Street
+  color: Yellow
+  price: 10
+  location:
+    latitude: 51.4416
+    longitude: 5.4834
+
+- name: Stratumseind
+  siteType: Street
+  color: Yellow
+  price: 10
+  location:
+    latitude: 51.4368
+    longitude: 5.4806
+
+- name: Popei
+  siteType: Street
+  color: Yellow
+  price: 10
+  location:
+    latitude: 51.4493
+    longitude: 5.4571
+
+- name: Jail
+  siteType: Jail
+  color: White
+  price: 10
+  location:
+    latitude: 51.4365
+    longitude: 5.4814
+
 #- name: Jail
 #  siteType: Jail
 #  color: Black
