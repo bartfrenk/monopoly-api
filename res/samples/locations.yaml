@@ -118,13 +118,13 @@
     latitude: 51.4413
     longitude: 5.4689
 
-- name: Golfbaan- / Club Welschap
+- name: Sporthal Strijp
   siteType: Street
   color: Red
   price: 10
   location:
-    latitude: 51.4464
-    longitude: 5.4215
+    latitude: 51.4366
+    longitude: 5.4467
 
 - name: Fit all day Eindhoven
   siteType: Street
