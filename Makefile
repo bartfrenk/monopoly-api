@@ -96,9 +96,14 @@ api-cors: ## Test whether server responds to CORS request
 		 "${SERVER_ADDRESS}/locations"
 
 api-visit: ## Simulate a visit
-	@curl -X 'POST' ${SERVER_ADDRESS}/locations/${location}/visit/${team}
+	@curl -X 'POST' ${SERVER_ADDRESS}/locations/${site}/visit/${team}
 
 api-sync-team:
 	@curl -v -d '{"latitude": 21.0, "longitude": 21.0}' ${SERVER_ADDRESS}/teams/${team}/sync \
 		  -H 'Content-Type: application/json'
+
+api-buy: ## Simulate buying a location
+	curl -v ${SERVER_ADDRESS}/locations/${site}/buy/${team} -d "\"NoQuestionToken 10\"" \
+         -H 'Content-Type: application/json'
 ##
+
