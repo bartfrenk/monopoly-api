@@ -1,5 +1,5 @@
 #%RAML 0.8
-title: Monopoly Server API
+title: Monopoly Server
 version: 0.2
 
 /locations:
@@ -12,9 +12,9 @@ version: 0.2
     body:
       application/json:
         example: !include ../../target/samples/locations.json
-  /{locationId}:
+  /{locationToken}:
     /visit:
-      /{teamId}:
+      /{teamToken}:
         post:
           description: |-
             Register that specified team visits this location.
@@ -48,41 +48,46 @@ version: 0.2
               description: |-
                 Succesfully registered the visit. The body depends on the scenario.
 
-                **Note**. Rent price is determined completely by the
-                backend. If the frontend needs to display additional
-                information, such as dice roll results, these are passed along
-                with the response.
-
     /buy:
-      post:
-        description: |-
-          Team attempts to buy the specified location.
+      /{teamToken}:
+        post:
+          description: |-
+            Team attempts to buy the specified location.
+          body:
+            description: >-
+              Contains a proof of an answered chance card question, or of the
+              drawing of a chance card that allows sale immediately.
 
-          There are a number of possible outcomes
-          - answer to chance card question was not correct. nothing happens.
-          - sale was successful
-          - buying team did not have enough money
-          - the location is already owned by another team
-          - the location is not buyable (i.e. not a property)
-        queryParameters:
-          teamId:
-            description: ID of the buying team.
-            type: number
-            required: true
-          chanceCard:
-            description: The ID of the chance card.
-            required: true
-          answer:
-            description: The index of the answer to specified chance card.
-            required: true
-        responses:
-          200:
-            description: |-
-              The sale was successfully evaluated.
+              Either of the form \'QuestionAnswer <questionToken>
+              <answerIndex>\' or \'NoQuestionToken <token>\'. The latter is now
+              always accepted as proof, regardless of the actual value of
+              <token>.
+
+            application/json:
+              example: |-
+                "QuestionAnswer 1234567891011 2"
+
+                "NoQuestionToken 98765432101"
+          responses:
+            200:
+              description: >-
+                The request was successfully handled. The actual outcome of the sale
+                is indicated in a string value, as in the examples.
+              body:
+                application/json:
+                  example: |-
+                    "SuccessfullyBought"
+
+                    "InsufficientMoney"
+
+                    "WrongAnswerGiven"
+
+                    "CannotBuySite"
+
 /teams:
   post:
     description: Register a single team.
-  /{teamId}:
+  /{teamToken}:
     /sync:
       description: |
         Serves to track the team\'s location and to get an update on the team\'s
@@ -96,6 +101,9 @@ version: 0.2
               {"latitude": 10.0, "longitude": 11.1}
         responses:
           200:
+            description: >-
+              Successfully uploaded the location. The response contains the
+              team\'s status and the amount of money in its wallet.
             body:
               application/json:
                 example: >-
