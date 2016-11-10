@@ -85,7 +85,7 @@ target/samples:
 
 ##
 
-experiment-cors: ## Test whether server responds to CORS request
+api-cors: ## Test whether server responds to CORS request
 	@curl -H "Origin: http://example.com" \
 		 -H "Accept: */*" \
 		 -H "Accept-Encoding: gzip, deflate, sdch" \
@@ -95,7 +95,10 @@ experiment-cors: ## Test whether server responds to CORS request
 		 -X OPTIONS --verbose \
 		 "${SERVER_ADDRESS}/locations"
 
-experiment-visit: ## Simulate a visit
+api-visit: ## Simulate a visit
 	@curl -X 'POST' ${SERVER_ADDRESS}/locations/${location}/visit/${team}
 
+api-sync-team:
+	@curl -v -d '{"latitude": 21.0, "longitude": 21.0}' ${SERVER_ADDRESS}/teams/${team}/sync \
+		  -H 'Content-Type: application/json'
 ##
