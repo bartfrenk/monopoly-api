@@ -17,9 +17,57 @@ data BuyPermission
   = QuestionAnswer QuestionToken
                    AnswerIndex
   | NoQuestionToken Token
-  deriving (Eq, Show, Generic)
+  deriving (Eq, Show, Read, Generic)
 
-instance FromJSON BuyPermission
+instance FromJSON BuyPermission where
+  parseJSON v = read <$> parseJSON v
+
+instance ToJSON BuyPermission where
+  toJSON = toJSON . show
+
+pay
+  :: MonadIO m
+  => Money
+  -> Maybe TeamE
+  -> Maybe TeamE
+  -> Maybe SiteE
+  -> TransactionReason
+  -> SqlPersistT m Bool
+pay amount msrcE mdestE msiteE reason = do
+  now <- liftIO getCurrentTime
+  case (msrcE, mdestE) of
+    (Nothing, Just destE) -> do
+      _ <- insert $ mkTrans now amount msrcE mdestE msiteE reason
+      update (entityKey destE) [TeamMoney +=. amount]
+      return True
+    (Just srcE, destAccount) ->
+      if teamMoney (entityVal srcE) < amount
+        then return False
+        else do
+          _ <- insert $ mkTrans now amount msrcE mdestE msiteE reason
+          case destAccount of
+            Nothing -> do
+              update (entityKey srcE) [TeamMoney -=. amount]
+              return True
+            Just destE -> do
+              update (entityKey srcE) [TeamMoney -=. amount]
+              update (entityKey destE) [TeamMoney +=. amount]
+              return True
+    _ -> error "bank to bank transaction does not make sense"
+
+mkTrans
+  :: UTCTime
+  -> Money
+  -> Maybe TeamE
+  -> Maybe TeamE
+  -> Maybe SiteE
+  -> TransactionReason
+  -> Transaction
+mkTrans time amount msrcE mdestE msiteE reason =
+  let msrcId = entityKey <$> msrcE
+      mdestId = entityKey <$> mdestE
+      msiteId = entityKey <$> msiteE
+  in Transaction time amount msrcId mdestId msiteId reason
 
 -- REVIEW: candidate for refactoring
 computeRent

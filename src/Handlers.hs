@@ -86,7 +86,8 @@ visit siteT teamT = do
                     _ <- update teamId [TeamStatus =. InJail now]
                     return $ TeamPutInJail now
                   (ToStart bonus, Start, _) -> do
-                    _ <- update teamId [TeamMoney +=. bonus, TeamStatus =. Free]
+                    _ <- pay bonus Nothing (Just teamE) Nothing StartBonus
+                    _ <- update teamId [TeamStatus =. Free]
                     return $ ReceivedStartBonus bonus
                   (InJail _, Jail, _) -> return NoVisitResult
                   (InJail _, _, _) -> return IllegalVisitWhileInJail
@@ -101,11 +102,9 @@ visit siteT teamT = do
                           else return InsufficientMoneyToBuy
                       Just ownerE -> do
                         (rent, dice) <- computeRent site
-                        if rent <= teamMoney team
-                          then do
-                            _ <- update (entityKey ownerE) [TeamMoney +=. rent]
-                            _ <- update (entityKey teamE) [TeamMoney -=. rent]
-                            return $ PayedRent rent (entityVal ownerE) dice
+                        success <- pay rent (Just teamE) (Just ownerE) (Just siteE) Rent
+                        if success
+                          then return $ PayedRent rent (entityVal ownerE) dice
                           else return InsufficientMoneyToRent
                   _ -> return NoVisitResult
     isRepeatedVisit
@@ -164,15 +163,13 @@ buy siteT teamT perm = do
       let site = entityVal siteE
       in case sitePrice site of
            Nothing -> return CannotBuySite
-           Just price ->
-             let team = entityVal teamE
-             in if teamMoney team <= price
-                  then return InsufficientMoney
-                  else do
-                    let teamId = entityKey teamE
-                    _ <- update teamId [TeamMoney -=. price]
-                    _ <- update (entityKey siteE) [SiteOwnerId =. Just teamId]
-                    return SuccessfullyBought
+           Just price -> do
+             success <- pay price (Just teamE) Nothing (Just siteE) Sale
+             if success
+               then do
+                 _ <- update (entityKey siteE) [SiteOwnerId =. Just (entityKey teamE)]
+                 return SuccessfullyBought
+             else return InsufficientMoney
 
 newTeam
   :: MonadAction m

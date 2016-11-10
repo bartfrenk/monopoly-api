@@ -25,6 +25,12 @@ type AnswerIndex = Word
 
 type DieResult = Int
 
+data TransactionReason
+  = Rent
+  | Sale
+  | StartBonus
+  deriving (Eq, Show, Read, Generic)
+
 data Location = Location
   { latitude :: Double
   , longitude :: Double
@@ -84,3 +90,5 @@ derivePersistField "TeamStatus"
 derivePersistField "UtilityType"
 
 derivePersistField "SiteType"
+
+derivePersistField "TransactionReason"

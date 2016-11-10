@@ -72,6 +72,14 @@ TeamLocation
   when UTCTime
   teamId TeamId
   location Location
+
+Transaction
+  when UTCTime
+  amount Money
+  source TeamId Maybe
+  destination TeamId Maybe
+  site SiteId Maybe
+  reason TransactionReason
 |]
 
 type TeamE = Entity Team
