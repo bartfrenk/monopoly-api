@@ -6,6 +6,9 @@ services:
       dockerfile: Dockerfile.pg
     expose:
       - "5432"
+    ports:
+      # expose port for debugging purposes
+      - "5433:5432"
     volumes:
       - store-config:/etc/postgresql
       - store-log:/var/log/postgresql
