@@ -224,7 +224,8 @@ syncTeam teamT loc = do
     Just teamE
     -- TODO: TeamLocation needs timestamp
      -> do
-      _ <- insert $ TeamLocation (entityKey teamE) loc
+      now <- liftIO getCurrentTime
+      _ <- insert $ TeamLocation now (entityKey teamE) loc
       team <- updateTeam teamE
       return
         SyncData

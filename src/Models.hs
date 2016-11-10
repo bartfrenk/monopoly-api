@@ -18,7 +18,6 @@ module Models
   ) where
 
 import Data.Aeson
-import Data.ByteString.Char8 (pack)
 import Data.Time.Clock (UTCTime)
 import Database.Persist
 import Database.Persist.TH
@@ -70,6 +69,7 @@ Question json
   deriving Eq
 
 TeamLocation
+  when UTCTime
   teamId TeamId
   location Location
 |]
