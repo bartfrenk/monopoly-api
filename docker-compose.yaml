@@ -7,9 +7,9 @@ services:
     expose:
       - "5432"
     volumes:
-      - db-config:/etc/postgresql
-      - db-log:/var/log/postgresql
-      - db-data:/var/lib/postgresql
+      - store-config:/etc/postgresql
+      - store-log:/var/log/postgresql
+      - store-data:/var/lib/postgresql
     container_name: monopoly-store
   server:
     image: monopoly_server
@@ -20,9 +20,9 @@ services:
     command: /usr/local/bin/monopoly-server
     container_name: monopoly-server
 volumes:
-  db-config:
+  store-config:
     external: false
-  db-log:
+  store-log:
     external: false
-  db-data:
+  store-data:
     external: false
