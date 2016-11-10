@@ -158,6 +158,14 @@
     latitude: 51.4368
     longitude: 5.4806
 
+- name: Genneper Watermolen
+  siteType: Utility Water
+  color: White
+  price: 10
+  location:
+    latitude: 51.4230
+    longitude: 5.4701
+
 - name: Popei
   siteType: Street
   color: Yellow
@@ -169,7 +177,7 @@
 - name: Jail
   siteType: Jail
   color: White
-  price: 10
+  price: 0
   location:
     latitude: 51.4365
     longitude: 5.4814
@@ -222,34 +230,10 @@
     latitude: 51.4266
     longitude: 5.4817
 
-#- name: Jail
-#  siteType: Jail
-#  color: Black
-#  location:
-#    latitude: 12.2
-#    longitude: 23.2
-#
-#- name: Witte Dame
-#  siteType: Street
-#  color: Yellow
-#  price: 20
-#  location:
-#    latitude: 31.4
-#    longitude: 24.4
-#
-#- name: Parktheater
-#  siteType: Street
-#  price: 40
-#  color: Blue
-#  location:
-#    latitude: 31.4
-#    longitude: 24.4
-#
-#- name: Stadswandelpark
-#  siteType: Street
-#  price: 80
-#  color: Blue
-#  location:
-#    latitude: 31.5
-#    longitude: 36
-#
+- name: Go
+  siteType: Start
+  color: White
+  price: 0
+  location:
+    latitude: 51.4396
+    longitude: 5.4755
