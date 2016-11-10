@@ -38,7 +38,7 @@ type TeamAPI = ReqBody '[JSON] TeamU :> Post '[JSON] TeamE
           :<|> Options '[JSON] NoContent
           :<|> Capture "teamT" TeamToken :> (
                  "sync" :> ReqBody '[JSON] Location
-                        :> Post '[JSON] (Money, TeamStatus))
+                        :> Post '[JSON] SyncData)
           :<|> Capture "teamT" TeamToken :> (
                  "sync" :> Options '[JSON] NoContent)
 

@@ -83,9 +83,20 @@ version: 0.2
   post:
     description: Register a single team.
   /{teamId}:
-    /wallet:
+    /sync:
+      description: |
+        Serves to track the team\'s location and to get an update on the team\'s
+        status.
       post:
         body:
           application/json:
             description: >-
               The current location of the team in latitude and longitude coordinates.
+            example: >-
+              {"latitude": 10.0, "longitude": 11.1}
+        responses:
+          200:
+            body:
+              application/json:
+                example: >-
+                  {"status":"Free","money":1000}

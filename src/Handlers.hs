@@ -15,7 +15,6 @@ import Data.Aeson
 import Data.Time.Clock
 import Database.Persist.Sql
 import GHC.Generics
-import Safe (headMay)
 
 import Game
 import Models
@@ -216,7 +215,7 @@ listSites = do
 
 syncTeam
   :: MonadAction m
-  => TeamToken -> Location -> SqlPersistT m (Money, TeamStatus)
+  => TeamToken -> Location -> SqlPersistT m SyncData
 syncTeam teamT loc = do
   logInfoN $ unwords ["syncTeam", tshow teamT, tshow loc]
   mteamE <- getBy $ UniqueTeamToken teamT
@@ -227,4 +226,8 @@ syncTeam teamT loc = do
      -> do
       _ <- insert $ TeamLocation (entityKey teamE) loc
       team <- updateTeam teamE
-      return (teamMoney team, teamStatus team)
+      return
+        SyncData
+        { money = teamMoney team
+        , status = teamStatus team
+        }

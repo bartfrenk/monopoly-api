@@ -25,9 +25,9 @@ type AnswerIndex = Word
 
 type DieResult = Int
 
-data Location = Location {
-  latitude :: Double,
-  longitude :: Double
+data Location = Location
+  { latitude :: Double
+  , longitude :: Double
   } deriving (Eq, Show, Read, Generic)
 
 instance FromJSON Location
@@ -38,26 +38,38 @@ data TeamStatus
   = ToJail
   | ToStart Money
   | InJail UTCTime
-  | Free deriving (Eq, Show, Read, Generic)
+  | Free
+  deriving (Eq, Show, Read, Generic)
 
-instance FromJSON TeamStatus
+instance FromJSON TeamStatus where
+  parseJSON v = read <$> parseJSON v
 
-instance ToJSON TeamStatus
+instance ToJSON TeamStatus where
+  toJSON = toJSON . show
 
 data UtilityType
   = Water
-  | Electra deriving (Eq, Show, Read, Generic)
+  | Electra
+  deriving (Eq, Show, Read, Generic)
 
 instance FromJSON UtilityType
 
 instance ToJSON UtilityType
+
+data SyncData = SyncData
+  { money :: Money
+  , status :: TeamStatus
+  } deriving (Eq, Show, Read, Generic)
+
+instance ToJSON SyncData
 
 data SiteType
   = Street
   | Station
   | Utility UtilityType
   | Start
-  | Jail deriving (Eq, Show, Read, Generic)
+  | Jail
+  deriving (Eq, Show, Read, Generic)
 
 instance FromJSON SiteType where
   parseJSON v = read <$> parseJSON v
@@ -66,6 +78,9 @@ instance ToJSON SiteType where
   toJSON = toJSON . show
 
 derivePersistField "Location"
+
 derivePersistField "TeamStatus"
+
 derivePersistField "UtilityType"
+
 derivePersistField "SiteType"
