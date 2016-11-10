@@ -1,14 +1,6 @@
 version: '2'
 services:
-  server:
-    build:
-      context: .
-      dockerfile: Dockerfile.server
-    ports:
-      - "8000:8000"
-    depends_on:
-      - db
-  db:
+  store:
     build:
       context: .
       dockerfile: Dockerfile.pg
@@ -18,6 +10,15 @@ services:
       - db-config:/etc/postgresql
       - db-log:/var/log/postgresql
       - db-data:/var/lib/postgresql
+    container_name: monopoly-store
+  server:
+    image: monopoly_server
+    depends_on:
+      - store
+    ports:
+      - "8000:8000"
+    command: /usr/local/bin/monopoly-server
+    container_name: monopoly-server
 volumes:
   db-config:
     external: false

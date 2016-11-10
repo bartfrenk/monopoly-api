@@ -69,6 +69,6 @@ local-bin-path: ./target/bin
 
 image:
   container:
-    name: bartfrenk/monopoly-server
+    name: monopoly_server
     base: fpco/stack-run
 
