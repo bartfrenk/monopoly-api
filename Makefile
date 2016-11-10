@@ -28,6 +28,14 @@ build-docs: target/docs/monopoly.html
 build-res: ## Generate target files from resource files
 build-res: build-schemas build-samples build-docs
 
+build-docker-pg: ## Build the PostgreSQL docker image.
+	docker build -t bartfrenk/monopoly-pg -f Dockerfile.pg .
+
+up-docker-pg: ## Run monopoly-pg in the background. Create it if it doesn't exist.
+	@docker create -p ${DB_PORT_HOST}:5432 --name monopoly-pg \
+			bartfrenk/monopoly-pg 2> /dev/null; \
+	docker start monopoly-pg
+
 # TODO: autogenerate targets
 build-samples: target/samples/locations.json \
 			   target/samples/team-1.json \

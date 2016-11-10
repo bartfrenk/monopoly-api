@@ -37,7 +37,6 @@ createdb -O monopoly monopoly -E UTF-8 -T template0
 # Backup config, logs and databases to Docker volumes.
 # VOLUME  ["/etc/postgresql", "/var/log/postgresql", "/var/lib/postgresql"]
 
-
 # Default command is to start the postgres server with specified data dir.
 CMD ["/usr/lib/postgresql/9.5/bin/postgres", \
 "-D", "/var/lib/postgresql/9.5/main", \
