@@ -9,8 +9,12 @@ import BasicPrelude hiding (insert, intercalate)
 import Control.Monad.Logger
 import Control.Monad (when)
 import Control.Monad.Trans (MonadIO, liftIO)
+import Control.Monad.State
+import qualified Control.Monad.State as State
 import Data.Aeson
 import Data.Maybe (fromJust)
+import Data.Ratio
+import Data.List (splitAt)
 import Data.Time.Clock
 import Database.Persist.Sql
 import GHC.Generics
@@ -96,8 +100,7 @@ computeRent Site {..} = do
     Station -> do
       owned <-
         selectList [SiteOwnerId ==. Just ownerId, SiteSiteType ==. Station] []
-      logDebugN $ unwords
-        [tshow siteSiteType, "owned", tshow owned]
+      logDebugN $ unwords [tshow siteSiteType, "owned", tshow owned]
       return (computeStationRent price (length owned), [])
     _ -> return (0, [])
   where
@@ -136,10 +139,68 @@ computeRent Site {..} = do
 
 drawChanceCards
   :: MonadIO m
-  => Int -> Maybe SiteE -> SqlPersistT m [ChanceCard]
-drawChanceCards limit _ = do
-  cardsE <- selectList [] [LimitTo limit]
-  return $ (Q . toQuestionD . entityVal) `fmap` cardsE
+  => Maybe SiteE -> SqlPersistT m [ChanceCard]
+drawChanceCards msite = do
+  siteSpecific <- getSiteSpecificCards msite
+  nonSpecific <- getNonSpecificCards
+  liftIO $ execStateT (draw siteSpecific nonSpecific) []
+  where
+    getSiteSpecificCards
+      :: MonadIO m
+      => Maybe SiteE -> SqlPersistT m [ChanceCard]
+    getSiteSpecificCards msiteE =
+      case msiteE of
+        Nothing -> return []
+        Just siteE -> do
+          let siteId = entityKey siteE
+          questions <- selectList [QuestionSiteId ==. Just siteId] []
+          return $ (Q . toQuestionD . entityVal) `fmap` questions
+    getNonSpecificCards
+      :: MonadIO m
+      => SqlPersistT m [ChanceCard]
+    getNonSpecificCards = do
+      questions <- selectList [QuestionSiteId ==. Nothing] []
+      return $ (Q . toQuestionD . entityVal) `fmap` questions
+
+draw :: [ChanceCard] -> [ChanceCard] -> StateT [ChanceCard] IO ()
+draw must fill =
+  let limit = 3
+      jailProb :: Rational
+      jailProb = 1 % 10
+      toStartProb :: Rational
+      toStartProb = 1 % 10
+      startBonus = 100
+  in do unless (null must) $
+          do siteCards <- liftIO $ choice 1 must
+             modify' (++ siteCards)
+        hasJailCard <- liftIO $ bernoulli jailProb
+        when hasJailCard $ modify' (++ [GoToJail])
+        hasToStartCard <- liftIO $ bernoulli toStartProb
+        when hasToStartCard $ modify' (++ [GoToStart startBonus])
+        currentCount <- length `fmap` State.get
+        genericCards <- liftIO $ choice (limit - currentCount) fill
+        modify (++ genericCards)
+
+bernoulli :: Rational -> IO Bool
+bernoulli r = do
+  n <- randomRIO (1, denominator r)
+  return $ n <= numerator r
+
+choice :: Int -> [a] -> IO [a]
+choice n = choiceAcc n []
+  where
+    choiceAcc :: Int -> [a] -> [a] -> IO [a]
+    choiceAcc cnt drawn left =
+      if cnt == 0 || null left
+        then return drawn
+        else do
+          i <- randomRIO (0, length left - 1)
+          choiceAcc (cnt - 1) ((left !! i) : drawn) (dropAt i left)
+
+dropAt :: Int -> [a] -> [a]
+dropAt i xs =
+  let (before, after) = splitAt i xs
+  in before ++ tail after
 
 canBuy
   :: MonadIO m

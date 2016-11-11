@@ -101,7 +101,7 @@ visit siteT teamT = do
                       Nothing ->
                         if price <= teamMoney team
                           then do
-                            chanceCards <- drawChanceCards 3 (Just siteE)
+                            chanceCards <- drawChanceCards (Just siteE)
                             return $ PickCard chanceCards
                           else return InsufficientMoneyToBuy
                       Just ownerE ->

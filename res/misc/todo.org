@@ -11,10 +11,21 @@
 * DONE Add to-start endpoint
   CLOSED: [2016-11-11 Fri 14:19]
 * TEST Fix rents
-* TODO Implement drawing chance cards
+Undefined behaviour if the total number of colors in the database do not match
+with the rules of the game.
+* DONE Update team status on visit
+  CLOSED: [2016-11-11 Fri 14:36]
+* TEST Implement drawing chance cards
 * DONE Disallow double visits only for rent
   CLOSED: [2016-11-11 Fri 12:00]
 Need to store transaction
-* TODO Update team status on visit
 * NICE-TO-HAVE Allow up to a fixed number of teams
+* NICE-TO-HAVE Only allow leaving Jail when close to Jail
+Currently a team leaves Jail when the sync endpoint is called and the time is
+up. This could also happen outside of the boundaries of Jail.
+
+Easy solution is to add a query parameter with the site to the sync
+endpoint. Then if the team is in a site, the token of the site is passed as
+value of the query parameter.
+* NICE-TO-HAVE Withdraw money when team doesn't move
 
