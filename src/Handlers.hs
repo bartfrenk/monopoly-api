@@ -183,12 +183,13 @@ newSites
   => [SiteU] -> SqlPersistT m [SiteE]
 newSites sitesU = do
   logInfoN $ unwords ["newSites", tshow $ length sitesU]
-  mapM newSite sitesU
+  now <- liftIO getCurrentTime
+  mapM (newSite now) sitesU
   where
     newSite
       :: MonadAction m
-      => SiteU -> SqlPersistT m SiteE
-    newSite siteU = createSite siteU >>= insertEntity
+      => UTCTime -> SiteU -> SqlPersistT m SiteE
+    newSite time siteU = createSite time siteU >>= insertEntity
 
 newQuestions
   :: MonadAction m

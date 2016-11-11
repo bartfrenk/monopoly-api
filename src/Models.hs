@@ -47,6 +47,7 @@ Site json
   color Color
   ownerId TeamId Maybe
   price Money Maybe
+  updated UTCTime
   deriving Show
   deriving Eq
 

@@ -170,18 +170,19 @@ createTeam TeamU {..} = do
 
 createSite
   :: MonadIO m
-  => SiteU -> m Site
-createSite SiteU {..} = do
-  t <- liftIO randomIO
+  => UTCTime -> SiteU -> m Site
+createSite time SiteU {..} = do
+  tk <- liftIO randomIO
   return
     Site
     { siteName = name
-    , siteToken = t
+    , siteToken = tk
     , siteLocation = location
     , siteSiteType = siteType
     , siteColor = color
     , sitePrice = price
     , siteOwnerId = Nothing
+    , siteUpdated = time
     }
 
 createQuestion
