@@ -1,4 +1,4 @@
-# Dependencies
+# Install
 
 Requires the following items to be installed:
 
@@ -9,16 +9,34 @@ Requires the following items to be installed:
 The last two are not required to run Monopoly Server, only to build the
 documentation (which is incomplete).
 
-# Running
-
-Ensure Haskell Stack and Docker are installed. Running,
-
 ```shell
 stack setup
-make build-docker-pg
-make run-server
 ```
 
-should do the trick. For information on how to load the resources in
-`res/samples`, simply try running `make`. This gives a list of all targets, each
-with a short description.
+# Run
+
+To run the latest version:
+
+```shell
+make build-images
+docker-compose up
+```
+
+To load the resources:
+
+```shell
+make load-locations
+make load-questions
+make load-teams
+```
+
+For the latter two it is best to `>` to a file, since there is no endpoint to
+retrieve the token for the teams and questions from the API.
+
+# Clean
+
+To start with a clean database run:
+
+```shell
+docker-compose down -v
+```
