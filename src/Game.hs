@@ -1,8 +1,12 @@
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE NoImplicitPrelude #-}
 {-# LANGUAGE DeriveGeneric #-}
 {-# LANGUAGE RecordWildCards #-}
 
 module Game where
 
+import BasicPrelude hiding (insert, intercalate)
+import Control.Monad.Logger
 import Control.Monad (when)
 import Control.Monad.Trans (MonadIO, liftIO)
 import Data.Aeson
@@ -11,7 +15,7 @@ import Data.Time.Clock
 import Database.Persist.Sql
 import GHC.Generics
 import Models
-import System.Random (randomIO)
+import System.Random (randomIO, randomRIO)
 
 data BuyPermission
   = QuestionAnswer QuestionToken
@@ -71,23 +75,30 @@ mkTrans time amount msrcE mdestE msiteE reason =
 
 -- REVIEW: candidate for refactoring
 computeRent
-  :: MonadIO m
+  :: (MonadIO m, MonadLogger m)
   => Site -> SqlPersistT m (Money, [DieResult])
 computeRent Site {..} = do
   let ownerId = fromJust siteOwnerId
+  let price = fromJust sitePrice
   case siteSiteType of
     Street -> do
       (owned, total) <- getTotalStreetOwned ownerId siteColor
-      let price = fromJust sitePrice
+      logDebugN $
+        unwords [tshow siteSiteType, "owned", tshow owned, "total", tshow total]
       return (computeStreetRent price owned total, [])
     Utility _ -> do
       owned <- getTotalUtilityOwned ownerId
-      let dieResult = 3
-      return (computeUtilityRent owned dieResult, [dieResult])
+      dieResult <- liftIO $ randomRIO (1, 6)
+      logDebugN $
+        unwords
+          [tshow siteSiteType, "owned", tshow owned, "die", tshow dieResult]
+      return (computeUtilityRent price owned dieResult, [dieResult])
     Station -> do
       owned <-
         selectList [SiteOwnerId ==. Just ownerId, SiteSiteType ==. Station] []
-      return (computeStationRent (length owned), [])
+      logDebugN $ unwords
+        [tshow siteSiteType, "owned", tshow owned]
+      return (computeStationRent price (length owned), [])
     _ -> return (0, [])
   where
     getTotalStreetOwned
@@ -98,8 +109,12 @@ computeRent Site {..} = do
       owned <- selectList [SiteColor ==. color, SiteOwnerId ==. Just teamId] []
       return (length sameColor, length owned)
     computeStreetRent :: Money -> Int -> Int -> Money
-    computeStreetRent price total owned -- TODO: what should this be?
-     = floor (toRational (price * owned) / toRational total)
+    computeStreetRent price total owned =
+      case (total, owned) of
+        (_, 0) -> 0
+        (1, _) -> floor (toRational price / 2)
+        (2, 3) -> price
+        _ -> 2 * price
     getTotalUtilityOwned
       :: MonadIO m
       => TeamId -> SqlPersistT m Int
@@ -110,14 +125,14 @@ computeRent Site {..} = do
            [SiteSiteType ==. Utility Electra, SiteOwnerId ==. Just teamId])
           []
       return $ length owned
-    computeUtilityRent :: Int -> Int -> Money
-    computeUtilityRent owned dieResult =
+    computeUtilityRent :: Money -> Int -> Int -> Money
+    computeUtilityRent price owned dieResult =
       case owned of
         0 -> 0
-        1 -> 4 * dieResult
-        _ -> 10 * dieResult
-    computeStationRent :: Int -> Money
-    computeStationRent _ = 12 -- TODO: what should this be?
+        1 -> floor $ toRational (4 * dieResult * price) / 10
+        _ -> dieResult * price
+    computeStationRent :: Money -> Int -> Money
+    computeStationRent price owned = floor $ toRational (price * owned) / 2
 
 drawChanceCards
   :: MonadIO m
