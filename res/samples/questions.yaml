@@ -14,6 +14,21 @@
     - 300 years old
   answerIndex: 2
 
+- phrase: How old is the Kerstman?
+  options:
+    - 100 years old
+    - 200 years old
+    - 300 years old
+  answerIndex: 3
+
+- phrase: How old is the LemonPI?
+  options:
+    - 1 years old
+    - 2 years old
+    - 3 years old
+    - 4 years old
+  answerIndex: 1
+
 - phrase: Illegal question
   options:
     - bla
