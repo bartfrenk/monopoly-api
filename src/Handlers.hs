@@ -14,6 +14,7 @@ import Control.Monad.Logger
 import Data.Aeson
 import Data.Time.Clock
 import Database.Persist.Sql
+import Servant (NoContent(..))
 import GHC.Generics
 import Data.Maybe (fromJust)
 
@@ -239,7 +240,6 @@ syncTeam teamT loc = do
   case mteamE of
     Nothing -> throwError $ TeamNotFound teamT
     Just teamE
-    -- TODO: TeamLocation needs timestamp
      -> do
       now <- liftIO getCurrentTime
       _ <- insert $ TeamLocation now (entityKey teamE) loc
@@ -249,3 +249,15 @@ syncTeam teamT loc = do
         { money = teamMoney team
         , status = teamStatus team
         }
+
+goToJail ::
+  MonadAction m
+  => TeamToken -> SqlPersistT m NoContent
+goToJail teamT = do
+  logInfoN $ unwords ["goToJail", tshow teamT]
+  mteamE <- getBy $ UniqueTeamToken teamT
+  case mteamE of
+    Nothing -> throwError $ TeamNotFound teamT
+    Just teamE -> do
+      update (entityKey teamE) [TeamStatus =. ToJail]
+      return NoContent

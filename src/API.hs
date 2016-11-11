@@ -41,6 +41,12 @@ type TeamAPI = ReqBody '[JSON] TeamU :> Post '[JSON] TeamE
                         :> Post '[JSON] SyncData)
           :<|> Capture "teamT" TeamToken :> (
                  "sync" :> Options '[JSON] NoContent)
+          :<|> Capture "teamT" TeamToken :> (
+                 "to-jail" :> Post '[JSON] NoContent)
+          :<|> Capture "teamT" TeamToken :> (
+                 "to-jail" :> Options '[JSON] NoContent)
+
+
 
 type QuestionAPI = ReqBody '[JSON] [QuestionU] :> Post '[JSON] [QuestionE]
               :<|> Options '[JSON] NoContent

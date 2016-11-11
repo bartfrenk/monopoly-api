@@ -105,7 +105,10 @@ api-sync-team:
 		  -H 'Content-Type: application/json'
 
 api-buy: ## Simulate buying a location
-	curl -v ${SERVER_ADDRESS}/locations/${site}/buy/${team} -d "\"NoQuestionToken 10\"" \
+	@curl -v ${SERVER_ADDRESS}/locations/${site}/buy/${team} -d "\"NoQuestionToken 10\"" \
          -H 'Content-Type: application/json'
+
+api-to-jail: ## Simulate drawing a To Jail chance card
+	curl -X 'POST' -v ${SERVER_ADDRESS}/teams/${team}/to-jail
 ##
 

@@ -1,4 +1,4 @@
-#+TODO: TODO WAIT TEST | DONE CANCELED
+#+TODO: TODO WAIT TEST NICE-TO-HAVE | DONE CANCELED
 
 * DONE Run server in Docker file
   CLOSED: [2016-11-11 Fri 12:46]
@@ -6,11 +6,13 @@
   CLOSED: [2016-11-10 Thu 23:38]
 * DONE Register locations
   CLOSED: [2016-11-10 Thu 23:39]
+* TEST Add jail endpoint
+* TODO Add to-start endpoint
 * TEST Fix rents
 * TODO Implement drawing chance cards
 * DONE Disallow double visits only for rent
   CLOSED: [2016-11-11 Fri 12:00]
 Need to store transaction
 * TODO Update team status on visit
-* TODO Allow up to a fixed number of teams
+* NICE-TO-HAVE Allow up to a fixed number of teams
 

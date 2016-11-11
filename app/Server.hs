@@ -72,7 +72,8 @@ server connStr = enter nat $ siteServer :<|> teamServer :<|> questionServer
       visitOption :<|>
       buy :<|>
       buyOption
-    teamServer = newTeam :<|> succeed :<|> syncTeam :<|> syncOption
+    teamServer =
+      newTeam :<|> succeed :<|> syncTeam :<|> syncOption :<|> goToJail :<|> goToJailOption
     questionServer = newQuestions :<|> succeed
 
 tcpPort :: Int
@@ -95,3 +96,6 @@ buyOption _ _ = return NoContent
 
 syncOption :: TeamToken -> HandlerM NoContent
 syncOption _ = return NoContent
+
+goToJailOption :: TeamToken -> HandlerM NoContent
+goToJailOption _ = return NoContent
