@@ -98,19 +98,21 @@ api-cors: ## Test whether server responds to CORS request
 		 "${SERVER_ADDRESS}/locations"
 
 api-visit: ## Simulate a visit
-	@curl -v -X 'POST' ${SERVER_ADDRESS}/locations/${site}/visit/${team}
+	@curl -X 'POST' ${SERVER_ADDRESS}/locations/${site}/visit/${team} | jq
 
 api-sync-team:
-	@curl -v -d '{"latitude": 21.0, "longitude": 21.0}' ${SERVER_ADDRESS}/teams/${team}/sync \
-		  -H 'Content-Type: application/json'
+	@curl -d '{"latitude": 21.0, "longitude": 21.0}' ${SERVER_ADDRESS}/teams/${team}/sync \
+		  -H 'Content-Type: application/json' | jq
 
 api-buy: ## Simulate buying a location
-	@curl -v ${SERVER_ADDRESS}/locations/${site}/buy/${team} -d "\"NoQuestionToken 10\"" \
-         -H 'Content-Type: application/json'
+	@curl  ${SERVER_ADDRESS}/locations/${site}/buy/${team} -d "\"NoQuestionToken 10\"" \
+         -H 'Content-Type: application/json' | jq
 
 api-to-jail: ## Simulate drawing a ToJail chance card
-	curl -X 'POST' -v ${SERVER_ADDRESS}/teams/${team}/to-jail
+	@curl -X 'POST' -v ${SERVER_ADDRESS}/teams/${team}/to-jail
 api-to-start: ## Simulate drawing a ToStart chance card
-	curl -X 'POST' -v ${SERVER_ADDRESS}/teams/${team}/to-start?amount=${amount}
+	@curl -X 'POST' -v ${SERVER_ADDRESS}/teams/${team}/to-start?amount=${amount}
 
+api-list-locations: ## Return loaded sites
+	@curl ${SERVER_ADDRESS}/locations | jq
 ##
