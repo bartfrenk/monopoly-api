@@ -108,3 +108,16 @@ version: 0.2
               application/json:
                 example: >-
                   {"status":"Free","money":1000}
+    /to-jail:
+      post:
+    /to-start:
+      post:
+        queryParameters:
+          amount:
+            type: integer
+            description: The bonus when passing start
+            required: false
+            default: 0
+
+/questions:
+  post: Load a list of questions.
