@@ -96,7 +96,7 @@ api-cors: ## Test whether server responds to CORS request
 		 "${SERVER_ADDRESS}/locations"
 
 api-visit: ## Simulate a visit
-	@curl -X 'POST' ${SERVER_ADDRESS}/locations/${site}/visit/${team}
+	@curl -v -X 'POST' ${SERVER_ADDRESS}/locations/${site}/visit/${team}
 
 api-sync-team:
 	@curl -v -d '{"latitude": 21.0, "longitude": 21.0}' ${SERVER_ADDRESS}/teams/${team}/sync \
