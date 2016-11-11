@@ -104,8 +104,13 @@ api-sync-team:
 	@curl -d '{"latitude": 21.0, "longitude": 21.0}' ${SERVER_ADDRESS}/teams/${team}/sync \
 		  -H 'Content-Type: application/json' | jq
 
-api-buy: ## Simulate buying a location
+api-buy-no-question: ## Simulate buying a location without having to answer a question
 	@curl  ${SERVER_ADDRESS}/locations/${site}/buy/${team} -d "\"NoQuestionToken 10\"" \
+         -H 'Content-Type: application/json' | jq
+
+api-buy-question: ## Simulate buying a location with a question chance card
+	@curl  ${SERVER_ADDRESS}/locations/${site}/buy/${team} \
+		 -d "\"QuestionToken ${question} ${answer}\"" \
          -H 'Content-Type: application/json' | jq
 
 api-to-jail: ## Simulate drawing a ToJail chance card
