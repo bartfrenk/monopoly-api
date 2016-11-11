@@ -196,7 +196,8 @@ newTeam
   => TeamU -> SqlPersistT m TeamE
 newTeam teamU = do
   logInfoN $ unwords ["newTeam", tshow teamU]
-  createTeam teamU >>= insertEntity
+  now <- liftIO getCurrentTime
+  createTeam now teamU >>= insertEntity
 
 newSites
   :: MonadAction m

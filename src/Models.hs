@@ -34,6 +34,7 @@ Team json
   UniqueTeamToken token
   money Money
   status TeamStatus
+  statusUpdated UTCTime
   deriving Show
   deriving Eq
 

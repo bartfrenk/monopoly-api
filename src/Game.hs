@@ -172,15 +172,16 @@ startingMoney = 1000
 
 createTeam
   :: MonadIO m
-  => TeamU -> m Team
-createTeam TeamU {..} = do
-  t <- liftIO randomIO
+  => UTCTime -> TeamU -> m Team
+createTeam time TeamU {..} = do
+  tk <- liftIO randomIO
   return
     Team
     { teamName = name
-    , teamToken = t
+    , teamToken = tk
     , teamMoney = startingMoney
     , teamStatus = Free
+    , teamStatusUpdated = time
     }
 
 createSite
