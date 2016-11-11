@@ -102,7 +102,8 @@ visit siteT teamT = do
                           else return InsufficientMoneyToBuy
                       Just ownerE -> do
                         (rent, dice) <- computeRent site
-                        success <- pay rent (Just teamE) (Just ownerE) (Just siteE) Rent
+                        success <-
+                          pay rent (Just teamE) (Just ownerE) (Just siteE) Rent
                         if success
                           then return $ PayedRent rent (entityVal ownerE) dice
                           else return InsufficientMoneyToRent
@@ -167,9 +168,13 @@ buy siteT teamT perm = do
              success <- pay price (Just teamE) Nothing (Just siteE) Sale
              if success
                then do
-                 _ <- update (entityKey siteE) [SiteOwnerId =. Just (entityKey teamE)]
+                 now <- liftIO getCurrentTime
+                 _ <-
+                   update
+                     (entityKey siteE)
+                     [SiteOwnerId =. Just (entityKey teamE), SiteUpdated =. now]
                  return SuccessfullyBought
-             else return InsufficientMoney
+               else return InsufficientMoney
 
 newTeam
   :: MonadAction m
