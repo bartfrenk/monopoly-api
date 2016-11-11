@@ -47,6 +47,7 @@ data BuyRes
   | InsufficientMoney
   | WrongAnswerGiven
   | CannotBuySite
+  | SiteAlreadyHasOwner
   deriving (Eq, Show, Generic)
 
 instance ToJSON BuyRes
@@ -177,9 +178,10 @@ buy siteT teamT perm = do
       => SiteE -> TeamE -> SqlPersistT m BuyRes
     buy' siteE teamE =
       let site = entityVal siteE
-      in case sitePrice site of
-           Nothing -> return CannotBuySite
-           Just price -> do
+      in case (siteOwnerId site, sitePrice site) of
+        (Just _, _) -> return SiteAlreadyHasOwner
+        (Nothing, Nothing) -> return CannotBuySite
+        (Nothing, Just price) -> do
              success <- pay price (Just teamE) Nothing (Just siteE) Sale
              if success
                then do
