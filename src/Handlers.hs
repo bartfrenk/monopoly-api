@@ -34,6 +34,7 @@ data VisitRes
               Team
               [DieResult]
   | TeamPutInJail UTCTime
+  | SiteOwnedByVisitor
   | RepeatedVisit
   | NoVisitResult
   deriving (Eq, Show, Generic)
@@ -102,13 +103,16 @@ visit siteT teamT = do
                             chanceCards <- drawChanceCards 3 (Just siteE)
                             return $ PickCard chanceCards
                           else return InsufficientMoneyToBuy
-                      Just ownerE -> do
-                        (rent, dice) <- computeRent site
-                        success <-
-                          pay rent (Just teamE) (Just ownerE) (Just siteE) Rent
-                        if success
-                          then return $ PayedRent rent (entityVal ownerE) dice
-                          else return InsufficientMoneyToRent
+                      Just ownerE ->
+                        if ownerE /= teamE
+                          then do
+                            (rent, dice) <- computeRent site
+                            success <-
+                              pay rent (Just teamE) (Just ownerE) (Just siteE) Rent
+                            if success
+                              then return $ PayedRent rent (entityVal ownerE) dice
+                              else return InsufficientMoneyToRent
+                          else return SiteOwnedByVisitor
                   _ -> return NoVisitResult
     isRepeatedVisit
       :: (MonadIO m, MonadLogger m)
