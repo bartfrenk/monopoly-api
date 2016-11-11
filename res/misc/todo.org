@@ -1,13 +1,15 @@
+#+TODO: TODO WAIT TEST | DONE CANCELED
 
 * DONE Run server in Docker file
-  CLOSED: [2016-11-08 Tue 23:09]
+  CLOSED: [2016-11-11 Fri 12:46]
 * DONE Register transactions
   CLOSED: [2016-11-10 Thu 23:38]
 * DONE Register locations
   CLOSED: [2016-11-10 Thu 23:39]
+* TEST Fix rents
 * TODO Implement drawing chance cards
-* TODO Fix rents
-* TODO Disallow double visits only for rent
+* DONE Disallow double visits only for rent
+  CLOSED: [2016-11-11 Fri 12:00]
 Need to store transaction
 * TODO Update team status on visit
 * TODO Allow up to a fixed number of teams
