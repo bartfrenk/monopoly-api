@@ -15,6 +15,7 @@ import Data.Aeson
 import Data.Time.Clock
 import Database.Persist.Sql
 import GHC.Generics
+import Data.Maybe (fromJust)
 
 import Game
 import Models
@@ -71,11 +72,12 @@ visit siteT teamT = do
     (Just siteE, Just teamE) -> visit' siteE teamE
   where
     visit'
-      :: MonadIO m
+      :: (MonadIO m, MonadLogger m)
       => SiteE -> TeamE -> SqlPersistT m VisitRes
     visit' siteE teamE = do
+      now <- liftIO getCurrentTime
       repeated <- isRepeatedVisit siteE teamE
-      now <- storeVisit siteE teamE
+      storeVisit now siteE teamE
       if repeated
         then return RepeatedVisit
         else let team = entityVal teamE
@@ -109,28 +111,36 @@ visit siteT teamT = do
                           else return InsufficientMoneyToRent
                   _ -> return NoVisitResult
     isRepeatedVisit
-      :: MonadIO m
+      :: (MonadIO m, MonadLogger m)
       => SiteE -> TeamE -> SqlPersistT m Bool
     isRepeatedVisit siteE teamE = do
-      lastVisit <- getLastVisit teamE
-      return $ (Just $ entityVal siteE) == lastVisit
+      mlastVisit <- getLastVisit teamE
+      case mlastVisit of
+        Nothing -> return False
+        Just lastVisit -> do
+          logDebugN (tshow lastVisit)
+          lastSite' <- get $ visitSiteId lastVisit
+          let lastSite = fromJust lastSite' --
+          logDebugN (tshow lastSite)
+          let currentSite = entityVal siteE
+          return $
+            currentSite == lastSite && siteUpdated currentSite < visitWhen lastVisit
     getLastVisit
       :: MonadIO m
-      => TeamE -> SqlPersistT m (Maybe Site)
+      => TeamE -> SqlPersistT m (Maybe Visit)
     getLastVisit teamE = do
       let teamId = entityKey teamE
       ordVisitsE <-
         selectList [VisitTeamId ==. teamId] [Desc VisitWhen, LimitTo 1]
       case ordVisitsE of
         [] -> return Nothing
-        (visitE:_) -> get (visitSiteId . entityVal $ visitE)
+        (visitE:_) -> return $ Just $ entityVal visitE
     storeVisit
       :: MonadIO m
-      => SiteE -> TeamE -> SqlPersistT m UTCTime
-    storeVisit siteE teamE = do
-      now <- liftIO getCurrentTime
-      _ <- insert $ Visit now (entityKey siteE) (entityKey teamE)
-      return now
+      => UTCTime -> SiteE -> TeamE -> SqlPersistT m ()
+    storeVisit t siteE teamE = do
+      _ <- insert $ Visit t (entityKey siteE) (entityKey teamE)
+      return ()
     getOwner
       :: MonadIO m
       => Site -> SqlPersistT m (Maybe TeamE)
