@@ -1,17 +1,25 @@
-# Install
+# Dependencies
 
-Requires the following items to be installed:
+## Haskell Stack
 
-- [Haskell Stack](https://docs.haskellstack.org)
-- PyYAML (`pip install PyYAML`)
-- raml2hmtl (`npm install raml2hmtl`)
-
-The last two are not required to run Monopoly Server, only to build the
-documentation (which is incomplete).
+Build tool for Haskell projects. For installation instructions see
+[https://docs.haskellstack.org]https://docs.haskellstack.org). Once installed
+run the following in the project root.
 
 ```shell
 stack setup
 ```
+
+## Miscellaneous
+
+Both PyYAML and raml2html are required to build the documentation. To install
+both globally,
+
+```shell
+pip install PyYAML
+npm install -g raml2html
+```
+
 
 # Run
 
