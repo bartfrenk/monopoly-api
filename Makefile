@@ -51,7 +51,7 @@ clean-target: ## Remove all files generated from resources
 	@rm -rf target
 
 load-all: ## Loads all resources into the server
-load-all: load-locations load-questions load-team
+load-all: load-locations load-questions load-teams
 
 load-locations: ## Load locations in YAML to the server
 load-locations: target/samples/locations.json
@@ -63,7 +63,7 @@ load-questions: target/samples/questions.json
 	@curl ${SERVER_ADDRESS}/questions -H 'Content-Type: application/json' \
 		 -d @$<
 
-load-teams: # Loads teams into the server
+load-teams: ## Loads teams into the server
 load-teams: target/samples/team-1.json target/samples/team-2.json
 	@curl ${SERVER_ADDRESS}/teams -H 'Content-Type: application/json' \
 		 -d @target/samples/team-1.json
