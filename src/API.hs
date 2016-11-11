@@ -42,12 +42,12 @@ type TeamAPI = ReqBody '[JSON] TeamU :> Post '[JSON] TeamE
           :<|> Capture "teamT" TeamToken :> (
                  "sync" :> Options '[JSON] NoContent)
           :<|> Capture "teamT" TeamToken :> (
-                 "to-jail" :> Post '[JSON] NoContent)
+                 "to-jail" :> PostNoContent '[JSON] NoContent)
           :<|> Capture "teamT" TeamToken :> (
                  "to-jail" :> Options '[JSON] NoContent)
           :<|> Capture "teamT" TeamToken :> (
                  "to-start" :> QueryParam "amount" Money
-                            :> Post '[JSON] NoContent)
+                            :> PostNoContent '[JSON] NoContent)
           :<|> Capture "teamT" TeamToken :> (
                  "to-start" :> Options '[JSON] NoContent)
 

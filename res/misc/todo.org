@@ -6,8 +6,10 @@
   CLOSED: [2016-11-10 Thu 23:38]
 * DONE Register locations
   CLOSED: [2016-11-10 Thu 23:39]
-* TEST Add jail endpoint
-* TEST Add to-start endpoint
+* DONE Add jail endpoint
+  CLOSED: [2016-11-11 Fri 14:19]
+* DONE Add to-start endpoint
+  CLOSED: [2016-11-11 Fri 14:19]
 * TEST Fix rents
 * TODO Implement drawing chance cards
 * DONE Disallow double visits only for rent

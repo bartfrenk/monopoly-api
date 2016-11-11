@@ -108,9 +108,9 @@ api-buy: ## Simulate buying a location
 	@curl -v ${SERVER_ADDRESS}/locations/${site}/buy/${team} -d "\"NoQuestionToken 10\"" \
          -H 'Content-Type: application/json'
 
-api-to-jail: ## Simulate drawing a To Jail chance card
+api-to-jail: ## Simulate drawing a ToJail chance card
 	curl -X 'POST' -v ${SERVER_ADDRESS}/teams/${team}/to-jail
-##
-api-to-start: ## Simulate drawing a To Jail chance card
+api-to-start: ## Simulate drawing a ToStart chance card
 	curl -X 'POST' -v ${SERVER_ADDRESS}/teams/${team}/to-start?amount=${amount}
 
+##
