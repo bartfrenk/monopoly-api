@@ -63,10 +63,12 @@ load-questions: target/samples/questions.json
 	@curl ${SERVER_ADDRESS}/questions -H 'Content-Type: application/json' \
 		 -d @$<
 
-load-team: # Loads a team into the server
-load-team: target/samples/team-1.json
+load-teams: # Loads teams into the server
+load-teams: target/samples/team-1.json target/samples/team-2.json
 	@curl ${SERVER_ADDRESS}/teams -H 'Content-Type: application/json' \
-		 -d @$<
+		 -d @target/samples/team-1.json
+	@curl ${SERVER_ADDRESS}/teams -H 'Content-Type: application/json' \
+		 -d @target/samples/team-2.json
 
 target/docs/monopoly.html: res/docs/monopoly.raml target/docs \
 						   build-samples build-schemas
