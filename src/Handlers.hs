@@ -261,3 +261,18 @@ goToJail teamT = do
     Just teamE -> do
       update (entityKey teamE) [TeamStatus =. ToJail]
       return NoContent
+
+goToStart ::
+  MonadAction m
+  => TeamToken -> Maybe Money -> SqlPersistT m NoContent
+goToStart teamT mamount = do
+  logInfoN $ unwords ["goToStart", tshow teamT, tshow mamount]
+  mteamE <- getBy $ UniqueTeamToken teamT
+  let amount = fromMaybe 0 mamount
+  case mteamE of
+    Nothing -> throwError $ TeamNotFound teamT
+    Just teamE -> do
+      update (entityKey teamE) [TeamStatus =. ToStart amount]
+      return NoContent
+
+

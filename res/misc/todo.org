@@ -7,7 +7,7 @@
 * DONE Register locations
   CLOSED: [2016-11-10 Thu 23:39]
 * TEST Add jail endpoint
-* TODO Add to-start endpoint
+* TEST Add to-start endpoint
 * TEST Fix rents
 * TODO Implement drawing chance cards
 * DONE Disallow double visits only for rent

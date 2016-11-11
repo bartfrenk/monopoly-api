@@ -111,4 +111,6 @@ api-buy: ## Simulate buying a location
 api-to-jail: ## Simulate drawing a To Jail chance card
 	curl -X 'POST' -v ${SERVER_ADDRESS}/teams/${team}/to-jail
 ##
+api-to-start: ## Simulate drawing a To Jail chance card
+	curl -X 'POST' -v ${SERVER_ADDRESS}/teams/${team}/to-start?amount=${amount}
 
