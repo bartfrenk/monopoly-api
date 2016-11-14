@@ -94,7 +94,7 @@
     latitude: 51.4463
     longitude: 5.4319
 
-- name: 18 septemberplein
+- name: 18 Septemberplein
   siteType: Street
   color: Orange
   price: 10
@@ -126,7 +126,7 @@
     latitude: 51.4366
     longitude: 5.4467
 
-- name: Fit all day Eindhoven
+- name: Fit All Day Eindhoven
   siteType: Street
   color: Red
   price: 10
@@ -166,7 +166,7 @@
     latitude: 51.4230
     longitude: 5.4701
 
-- name: Popei
+- name: PopEI
   siteType: Street
   color: Yellow
   price: 10

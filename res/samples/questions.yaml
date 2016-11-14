@@ -1,37 +1,452 @@
-- phrase: When was the Parktheater founded?
+- phrase: Wat heeft de architect va de HeuvelGallerie niet ontworpen?
   options:
-    - 1 year ago
-    - 2 years ago
-    - 3 years ago
-    - 10 years ago
+    - Steenkoolmijn
+    - Klokkentoren
+    - Electriciteitscentrale
+    - Station?
+  answerIndex: 3
+  site: Heuvel Gallerie
+
+- phrase: Hoeveel parkeerplekken heeft de woenselse markt?
+  options:
+    - 165
+    - 195
+    - 235
+    - 265
+  answerIndex: 2
+  site: Woenselse Markt
+
+- phrase: Onder welke naam is het NS Station ook bekend?
+  options:
+    - Transistor
+    - Relais
+    - De Wissel
+    - Arcadis
   answerIndex: 0
+  site: NS Station Eindhoven
+
+- phrase: Hoeveel gulden koste de bouw van de St Catharina kerk, die werd voltooid in 1867?
+  options:
+    - 253.000
+    - 279.000
+    - 312.000
+    - 369.000
+  answerIndex: 1
+  site: St. Catharina kerk
+
+- phrase: In welk jaar werd de steentjeskerk definitief voor sloop behoed omdat het op de gemeentelijke monumentenijst werd gezet?
+  options:
+    - 1945
+    - 1977
+    - 1984
+    - 2001
+  answerIndex: 1
+  site: Steentjeskerk
+
+- phrase: Hoeveel kilometer spankabel is er verwerkt in het beton van de schotel van het evoluon?
+  options:
+    - 6 km
+    - 9 km
+    - 69km
+    - 169 km
+  answerIndex: 3
+  site: Evoluon
+
+- phrase: Voor de hoeveelste keer neemt "Fontys Centrum voor Onderijs" de Regie op zich bij de "Student Startup Award Brabant" die zal plaatsvinden op 24 november 2016?
+  options:
+    - 1e keer
+    - 3e keer
+    - 5e keer
+    - 10e keer
+  answerIndex: 0
+  site: Fontys Campus Rachelsmolen
+
+- phrase: Wat is het totaal vermogen dat de gecombineerde stoom- en gasturbine installatie van deze warmtekrachtcentrale kan leveren?
+  options:
+    - 28MW
+    - 35MW
+    - 46MW
+    - 52MW
+  answerIndex: 3
+  site: Centrale Essent Beukenlaan
+
+- phrase: In welk jaar krijgt de Universiteit het aanbod, van de gemeente Eindhoven, om het stuk grond op de hoek van de Prof.dr. Dorgelolaan en de John F. Kennedylaan te kopen voor anderhalf miljoen gulden?
+  options:
+    - 1980
+    - 1988
+    - 1993
+    - 2001
+  answerIndex: 1
+  site: Limbopad
+
+- phrase: Wat was de oorspronkelijke functie van het Phillipsgebouw "De bruine heer"?
+  options:
+    - 1 Hoofdkantoor
+    - 2 Radiofabriek
+    - 3 Opleidingscentrum
+    - 4 Lampenfabriek.
+  answerIndex: 0
+  site: GreenHouse Group
+
+- phrase: Hoeveel buslijnen komen er langs dit busstation?
+  options:
+    - 5
+    - 7
+    - 10
+    - 12
+  answerIndex: 2
+  site: Busstation Woensel XL
+
+- phrase: In welk jaar werd het park en de kinderboerderij door de familie Philips - Van Lennep aan de gemeente Eindhoven geschonken?
+  options:
+    - 1963
+    - 1966
+    - 1971
+    - 1975
+  answerIndex: 0
+  site: Philips van Lenneppark
+
+- phrase: Hoeveel fietsen kunnen er in de fietsenstalling onder het 18 septemberplein worden gestald?
+  options:
+    - 350
+    - 950
+    - 1350
+    - 1650
+  answerIndex: 2
+    site: 18 Septemberplein
+
+- phrase: Wat is geen zaal in het Parktheater?
+  options:
+    - Grote Zaal
+    - Philips Zaal
+    - De Kameleon
+    - Park Zaal
+  answerIndex: 3
   site: Parktheater
 
-- phrase: How old is Sinterklaas?
+- phrase: Hoeveel toeschouwers konden op de eerste overdekte houten tribune van 1916 plaats nemen?
   options:
-    - 100 years old
-    - 200 years old
-    - 300 years old
+    - 500
+    - 700
+    - 900
+    - 1100
+  answerIndex: 2
+  site: PSV Stadion
+
+- phrase: Hoeveel personen kunnen er op de tribune van Sporthal Strijp?
+  options:
+    - 260
+    - 310
+    - 360
+    - 410
+  answerIndex: 1
+  site: Sporthal Strijp
+
+- phrase: Hoeveel Fit All Day 'clubs' zijn er in Nederland?
+  options:
+    - 7
+    - 11
+    - 14
+    - 20
+  answerIndex: 0
+  site: Fit All Day Eindhoven
+
+- phrase: Wie hebben de Grafics in de tunnelmuren ontworpen?
+  options:
+    - 1 Bart van Hooft en Brigitt Albers
+    - 2 Berry Sanders en Bram Tuns
+    - 3 Chloë Alyshea en Daan Meulendijks
+    - 4 Eric Cad en Frea Zwaag.
+  answerIndex: 1
+  site: NS Station Strijp S
+
+- phrase: Hoeveel bezoekers kunnen er in de grote zaal van de Effenaar?
+  options:
+    - 1200
+    - 1300
+    - 1400
+    - 1500
+  answerIndex: 0
+  site: Effenaar
+
+- phrase: Via het Stratumseind verliet men de stad door de Stratumse Poort, één van de stadspoorten die Eindhoven heeft gekend. Hoeveel stadspoorten heeft Eindhoven in totaal gekend?
+  options:
+    - 3
+    - 4
+    - 5
+    - 6
+  answerIndex: 2
+  site: Stratumseind
+
+- phrase: Welke watermolen ligt stroomafwaarts van de Genneper Watermolen?
+  options:
+    - Volmolen te Waalre
+    - Stratumse Watermolen?
+  answerIndex: 1
+  site: Genneper Watermolen
+
+- phrase: Wat is de kernactiviteit van "Popei"?
+  options:
+    - Muziekles
+    - Concertzaal
+    - Opnamestudio
+    - Talentontwikkeling
+  answerIndex: 3
+  site: PopEI
+
+- phrase: In welk jaat ontstond vanuit de Eindhovense lerarenopleiding het initiatief om een ‘prehistorisch dorp’ te bouwen?
+  options:
+    - 1981
+    - 1982
+    - 1983
+    - 1984
+  answerIndex: 1
+  site: Prehistorisch dorp
+
+- phrase: Welk schilderij van Jan Sluijters werd steeds, door de eerste portier van het Van Abbe Museum, uit de toonzaal verwijderd als er kinderen op bezoek kwamen. Omdat zij het niet mochten zien?
+  options:
+    - Liggend naakt
+    - Zittend naakt
+    - Hangend naakt
+    - Vallend naakt
+  answerIndex: 0
+  site: Van Abbe museum
+
+- phrase: De hoeveelste bezoeker van het DAF museum werd er op 24 februari 2016 in het zonnetje gezet?
+  options:
+    - 250.000
+    - 500.000
+    - 750.000
+    - 1.000.000
+  answerIndex: 2
+  site: DAF Museum
+
+- phrase: Wat is het maximum gewicht van het grootste vliegtuig dat ooit lande Eindhoven Airport?
+  options:
+    - 405 ton
+    - 575 ton
+    - 640 ton
+    - 730 ton
+  answerIndex: 2
+  site: Eindhoven Airport
+
+- phrase: Bij wie ben je, als je "YOU ARE HERE" ziet?
+  options:
+    - Bommel
+    - W. Van der Schoot
+    - Javaans Eetcafe
+    - De Baron
+  answerIndex: 1
+  site: Kleine Berg
+
+- phrase: Wat is de vorm van het water waarboven het radiomonument uitsteekt?
+  options:
+    - Schoppen
+    - Ruit
+    - Hart
+    - Klaver.
+  answerIndex: 2
+  site: Radio Monument
+
+- phrase: Welke van volgende godsdiensten is de oudste?
+  options:
+    - de Islam
+    - het Jodendom
+    - het Christendom"
+  answerIndex: 1
+
+- phrase: Welke figuur is te zien op de vlag van de Amerikaanse Staat Texas?
+  options:
+    - een oliebron
+    - een ster
+    - een olifant"
+  answerIndex: 1
+
+- phrase: Op welk nummer in Wall Street is de New York Stock Exchange gevestigd?
+  options:
+    - 0
+    - 11
+    - 911"
+  answerIndex: 1
+
+- phrase: Welk land splitst Azerbaidzjan in twee stukken?
+  options:
+    - Rusland
+    - Armenië
+    - Iran"
+  answerIndex: 1
+
+- phrase: In welk land werden op het einde van de 19 de eeuw de eerste concentratiekampen opgericht?
+  options:
+    - Zuid-Afrika
+    - Rusland
+    - Cuba"
   answerIndex: 2
 
-- phrase: How old is the Kerstman?
+- phrase: Welke componist wordt genoemd in het nummer "Domino" van Clouseau?
   options:
-    - 100 years old
-    - 200 years old
-    - 300 years old
-  answerIndex: 3
+    - Mozart
+    - Bach
+    - Beethoven"
+  answerIndex: 0
 
-- phrase: How old is the LemonPI?
+- phrase: Wat is een stukjesdraaier?
   options:
-    - 1 years old
-    - 2 years old
-    - 3 years old
-    - 4 years old
+    - iemand die werkt aan de lopende band
+    - iemand die bruggen opent en sluit
+    - een spijbelaar"
+  answerIndex: 2
+
+- phrase: Wat bestudeert een ziganoloog?
+  options:
+    - zigeuners
+    - penissen
+    - tempels"
+  answerIndex: 0
+
+- phrase: Wat was er zo bijzonder aan de metro die in april 1983 in Lille in bedrijf werd genomen?
+  options:
+    - de treinstellen hadden geen bestuurder
+    - de metro rijdt op luchtkussens
+    - alle metrostations liggen boven de grond"
+  answerIndex: 0
+
+- phrase: Welk gezwel bestaat echt?
+  options:
+    - Dallas-gezwel
+    - Ewing-gezwel
+    - Barnes-gezwel"
   answerIndex: 1
 
-- phrase: Illegal question
+- phrase: Langs welke rivier ligt Pocahontas begraven?
   options:
-    - bla
-    - why?
-  site: Parktheater
+    - de Nijl
+    - de Tigris
+    - de Thames"
+  answerIndex: 2
+
+- phrase: Hoeveel Filistijnen doodde Samson met een kaakbeen?
+  options:
+    - 10
+    - 100
+    - 1000"
+  answerIndex: 2
+
+- phrase: Wat is de naam van de slechterik in "Barbarella"?
+  options:
+    - Abba
+    - T'Pau
+    - Duran Duran"
+  answerIndex: 2
+
+- phrase: Wat betekent de uitdrukking "de batterij laten spreken"?
+  options:
+    - iemand een pak slaag geven
+    - winden laten
+    - zich opladen alvorens aan de strijd te beginnen"
   answerIndex: 1
+
+- phrase: Het Engelse woord '"juice" betekent uiteraard sap. In het argot heeft het woord echter nog een andere betekenis, welke?
+  options:
+    - sperma
+    - bier
+    - benzine"
+  answerIndex: 2
+
+- phrase: Welk van volgende werkwoorden is een synoniem voor flink eten?
+  options:
+    - duikboten
+    - kastelen
+    - bunkeren"
+  answerIndex: 2
+
+- phrase: Welke kapper zit tegenover de hoofdingang van de Admirant?
+  options:
+    - Faces Kapper
+    - Rob Peetoom
+    - Team Kappers"
+  answerIndex: 1
+
+- phrase: Welke winkel zit er in de blob tegenover de Primark?
+  options:
+    - Esprit
+    - H&M
+    - America Today"
+  answerIndex: 2
+
+- phrase: Tussen De Admirant en De Admirant-toren zit een loopbrug. Hoeveel lagen kent deze loopbrug?
+  options:
+    - 3
+    - 4
+    - 5"
+  answerIndex: 1
+
+- phrase: Een bekende rivier in Eindhoven is de Dommel, bekend van de Dommelsche brouwerij. Welk bier wordt nog meer in deze brouwerij gebrouwen?
+  options:
+    - Hertog Jan
+    - La Trappe
+    - Oranjeboom"
+  answerIndex: 0
+
+- phrase: De bekendste Autofabrikant van Nederland is DAF, de bekendste versnellingsbak is de Variomatic. Van welk automerk kreeg Hub van Doorne de inspiratie om deze te maken?
+  options:
+    - Buick
+    - Volvo
+    - Ford"
+  answerIndex: 0
+
+- phrase: Welk land is géén Schengenland en mag je dus niet vrij naar reizen als inwoner van de Europese Unie
+  options:
+    - IJsland
+    - Ierland
+    - Zwitserland"
+  answerIndex: 1
+
+- phrase: Vorige week was Glow in Eindhoven, welk project is als permanent project gebleven?
+  options:
+    - Tunnel of Light
+    - AnTUenna
+    - Private Light"
+  answerIndex: 1
+
+- phrase: De gemeente Eindhoven hanteert de naam Eindhoven Airport ook als naam voor een buurt in het stadsdeel Strijp. Hoeveel inwoners kent deze buurt?
+  options:
+    - 5
+    - 10
+    - 20"
+  answerIndex: 0
+
+- phrase: Welke gratis fietsenstalling is inmiddels gesloten?
+  options:
+    - 18 septemberplein
+    - Ir. Ottenbad/Sportcomplex Eindhoven-Noord
+    - Kennedyplein"
+  answerIndex: 2
+
+- phrase: Wat was (in 2015) de oppervlakte van de Gemeente Eindhoven?
+  options:
+    - 80,23 km2
+    - 88,84 km2
+    - 92,96 km2"
+  answerIndex: 1
+
+- phrase: Wat was in 2015 na Nederlands de meest vertegenwoordigde nationaliteit in de gemeente Eindhoven?
+  options:
+    - Pools
+    - Turks
+    - Indiaas"
+  answerIndex: 0
+
+- phrase: Zoals Rotterdam de Markthal kent, kent Eindhoven ook een overdekte versmarkt. Hoe heet deze?
+  options:
+    - Vershal Strijp
+    - Vershal Veem
+    - De Versmarkt "
+  answerIndex: 1
+
+- phrase: Een van de oudste nog bestaande gebouwen in Eindhoven is Klooster Mariënhage. Uit welk jaar stamt dit klooster?
+  options:
+    - 1359
+    - 1401
+    - 1419"
+  answerIndex: 2
