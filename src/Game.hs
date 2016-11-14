@@ -226,7 +226,7 @@ refreshStatus now team@Team {..} =
     _ -> team
 
 jailTime :: NominalDiffTime
-jailTime = 1000
+jailTime = 300
 
 startingMoney :: Money
 startingMoney = 1000
