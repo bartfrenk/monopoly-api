@@ -75,8 +75,8 @@
   color: Purple
   price: 10
   location:
-    latitude: 51.4402
-    longitude: 5.4763
+    latitude: 51.4403
+    longitude: 5.4757
 
 - name: Busstation Woensel XL
   siteType: Station
