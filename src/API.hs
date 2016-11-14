@@ -52,9 +52,6 @@ type TeamAPI = ReqBody '[JSON] TeamU :> Post '[JSON] TeamE
                  "to-start" :> Options '[JSON] NoContent)
 
 
-
-
-
 type QuestionAPI = ReqBody '[JSON] [QuestionU] :> Post '[JSON] [QuestionE]
               :<|> Options '[JSON] NoContent
 
