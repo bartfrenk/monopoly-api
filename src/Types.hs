@@ -13,7 +13,7 @@ type Money = Int
 
 type Color = String
 
-type Token = Word64
+type Token = Word16
 
 type SiteToken = Token
 
