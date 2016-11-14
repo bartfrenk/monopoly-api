@@ -28,6 +28,7 @@ library
                        basic-prelude,
                        bytestring-conversion,
                        random,
+                       unordered-containers,
                        free,
                        http-api-data,
                        monad-logger,

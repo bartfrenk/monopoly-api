@@ -14,12 +14,25 @@ import qualified Control.Monad.State as State
 import Data.Aeson
 import Data.Maybe (fromJust)
 import Data.Ratio
+import Data.HashMap.Strict (HashMap)
 import Data.List (splitAt)
 import Data.Time.Clock
 import Database.Persist.Sql
 import GHC.Generics
 import Models
 import System.Random (randomIO, randomRIO)
+
+data TeamOverview = TeamOverview
+  { lastLocation :: Maybe Location
+  , money :: Money
+  , status :: TeamStatus
+  , sitesOwned :: [String]
+  , name :: String
+  } deriving (Eq, Show, Generic)
+
+instance ToJSON TeamOverview
+
+type GameOverview = HashMap String TeamOverview
 
 data BuyPermission
   = QuestionAnswer QuestionToken
@@ -291,3 +304,18 @@ updateTeam teamE = do
   let team' = refreshStatus now team
   when (team' /= team) $ replace (entityKey teamE) team
   return team'
+
+getLastLocation
+  :: MonadIO m
+  => Key Team -> SqlPersistT m (Maybe Location)
+getLastLocation teamK = do
+  mloc <-
+    selectFirst [TeamLocationTeamId ==. teamK] [Desc TeamLocationWhen]
+  return $ (teamLocationLocation . entityVal) `fmap` mloc
+
+getTotalSitesOwned
+  :: MonadIO m
+  => Key Team -> SqlPersistT m [String]
+getTotalSitesOwned teamK = do
+  owned <- selectList [SiteOwnerId ==. Just teamK] []
+  return $ (siteName . entityVal) `fmap` owned

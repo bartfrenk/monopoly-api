@@ -12,6 +12,7 @@ import BasicPrelude hiding (insert)
 import Control.Monad.Except
 import Control.Monad.Logger
 import Data.Aeson
+import qualified Data.HashMap.Strict as HM
 import Data.Time.Clock
 import Database.Persist.Sql
 import Servant (NoContent(..))
@@ -179,9 +180,9 @@ buy siteT teamT perm = do
     buy' siteE teamE =
       let site = entityVal siteE
       in case (siteOwnerId site, sitePrice site) of
-        (Just _, _) -> return SiteAlreadyHasOwner
-        (Nothing, Nothing) -> return CannotBuySite
-        (Nothing, Just price) -> do
+           (Just _, _) -> return SiteAlreadyHasOwner
+           (Nothing, Nothing) -> return CannotBuySite
+           (Nothing, Just price) -> do
              success <- pay price (Just teamE) Nothing (Just siteE) Sale
              if success
                then do
@@ -242,8 +243,7 @@ syncTeam teamT loc = do
   mteamE <- getBy $ UniqueTeamToken teamT
   case mteamE of
     Nothing -> throwError $ TeamNotFound teamT
-    Just teamE
-     -> do
+    Just teamE -> do
       now <- liftIO getCurrentTime
       _ <- insert $ TeamLocation now (entityKey teamE) loc
       team <- updateTeam teamE
@@ -253,8 +253,8 @@ syncTeam teamT loc = do
         , status = teamStatus team
         }
 
-goToJail ::
-  MonadAction m
+goToJail
+  :: MonadAction m
   => TeamToken -> SqlPersistT m NoContent
 goToJail teamT = do
   logInfoN $ unwords ["goToJail", tshow teamT]
@@ -265,8 +265,8 @@ goToJail teamT = do
       update (entityKey teamE) [TeamStatus =. ToJail]
       return NoContent
 
-goToStart ::
-  MonadAction m
+goToStart
+  :: MonadAction m
   => TeamToken -> Maybe Money -> SqlPersistT m NoContent
 goToStart teamT mamount = do
   logInfoN $ unwords ["goToStart", tshow teamT, tshow mamount]
@@ -278,4 +278,28 @@ goToStart teamT mamount = do
       update (entityKey teamE) [TeamStatus =. ToStart amount]
       return NoContent
 
+gameOverview
+  :: MonadAction m
+  => SqlPersistT m GameOverview
+gameOverview = do
+  teamsE <- selectList [] []
+  overviews <- mapM teamOverview teamsE
+  let tokens = (show . teamToken . entityVal) `fmap` teamsE
+  return $ HM.fromList $ zip tokens overviews
 
+teamOverview
+  :: MonadAction m
+  => TeamE -> SqlPersistT m TeamOverview
+teamOverview teamE = do
+  let teamK = entityKey teamE
+  let team = entityVal teamE
+  lastLocation <- getLastLocation teamK
+  totalSitesOwned <- getTotalSitesOwned teamK
+  return
+    TeamOverview
+    { lastLocation = lastLocation
+    , money = teamMoney team
+    , status = teamStatus team
+    , sitesOwned = totalSitesOwned
+    , name = teamName team
+    }

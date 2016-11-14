@@ -50,6 +50,8 @@ type TeamAPI = ReqBody '[JSON] TeamU :> Post '[JSON] TeamE
                             :> PostNoContent '[JSON] NoContent)
           :<|> Capture "teamT" TeamToken :> (
                  "to-start" :> Options '[JSON] NoContent)
+          :<|> "status" :> Get '[JSON] GameOverview
+          :<|> "status" :> Options '[JSON] NoContent
 
 
 type QuestionAPI = ReqBody '[JSON] [QuestionU] :> Post '[JSON] [QuestionE]

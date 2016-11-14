@@ -120,4 +120,8 @@ api-to-start: ## Simulate drawing a ToStart chance card
 
 api-list-locations: ## Return loaded sites
 	@curl ${SERVER_ADDRESS}/locations | jq
+
+api-game-overview: ## Returns game status
+	@curl ${SERVER_ADDRESS}/teams/status
+
 ##

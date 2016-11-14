@@ -75,7 +75,9 @@ server connStr = enter nat $ siteServer :<|> teamServer :<|> questionServer
     teamServer =
       newTeam :<|> succeed :<|> syncTeam :<|> syncOption :<|> goToJail :<|> goToJailOption :<|>
       goToStart :<|>
-      goToStartOption
+      goToStartOption :<|>
+      gameOverview :<|>
+      gameOverviewOption
     questionServer = newQuestions :<|> succeed
 
 tcpPort :: Int
@@ -89,6 +91,9 @@ migratePostgreSql =
 
 succeed :: HandlerM NoContent
 succeed = return NoContent
+
+gameOverviewOption :: HandlerM NoContent
+gameOverviewOption = return NoContent
 
 visitOption :: SiteToken -> TeamToken -> HandlerM NoContent
 visitOption _ _ = return NoContent
