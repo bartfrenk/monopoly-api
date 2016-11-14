@@ -52,7 +52,7 @@
   answerIndex: 3
   site: Evoluon
 
-- phrase: Voor de hoeveelste keer neemt "Fontys Centrum voor Onderijs" de Regie op zich bij de "Student Startup Award Brabant" die zal plaatsvinden op 24 november 2016?
+- phrase: Voor de hoeveelste keer neemt "Fontys Centrum voor Onderwijs" de Regie op zich bij de "Student Startup Award Brabant" die zal plaatsvinden op 24 november 2016?
   options:
     - "1e keer"
     - "3e keer"
@@ -81,10 +81,10 @@
 
 - phrase: Wat was de oorspronkelijke functie van het Phillipsgebouw "De bruine heer"?
   options:
-    - "1 Hoofdkantoor"
-    - "2 Radiofabriek"
-    - "3 Opleidingscentrum"
-    - "4 Lampenfabriek."
+    - Hoofdkantoor
+    - Radiofabriek
+    - Opleidingscentrum
+    - Lampenfabriek
   answerIndex: 0
   site: GreenHouse Group
 
@@ -113,7 +113,7 @@
     - "1350"
     - "1650"
   answerIndex: 2
-    site: 18 Septemberplein
+  site: 18 Septemberplein
 
 - phrase: Wat is geen zaal in het Parktheater?
   options:
@@ -194,7 +194,7 @@
   answerIndex: 3
   site: PopEI
 
-- phrase: In welk jaat ontstond vanuit de Eindhovense lerarenopleiding het initiatief om een ‘prehistorisch dorp’ te bouwen?
+- phrase: In welk jaar ontstond vanuit de Eindhovense lerarenopleiding het initiatief om een "prehistorisch dorp" te bouwen?
   options:
     - "1981"
     - "1982"
@@ -233,18 +233,18 @@
 - phrase: Bij wie ben je, als je "YOU ARE HERE" ziet?
   options:
     - Bommel
-    - W. Van der Schoot
+    - "W. Van der Schoot"
     - Javaans Eetcafe
     - De Baron
   answerIndex: 1
   site: Kleine Berg
 
-- phrase: Wat is de vorm van het water waarboven het radiomonument uitsteekt?
+- phrase: Wat is de vorm van het water waarboven het radio monument uitsteekt?
   options:
     - Schoppen
     - Ruit
     - Hart
-    - Klaver.
+    - Klaver
   answerIndex: 2
   site: Radio Monument
 
@@ -269,10 +269,10 @@
     - "911"
   answerIndex: 1
 
-- phrase: Welk land splitst Azerbaidzjan in twee stukken?
+- phrase: Welk land splitst Azerbeidzjan in twee stukken?
   options:
     - Rusland
-    - Armenië
+    - Armenie
     - Iran
   answerIndex: 1
 
