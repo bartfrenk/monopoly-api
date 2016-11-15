@@ -41,6 +41,7 @@ restart-and-deploy: ## Stops Docker Compose, rebuild images and Launches Docker 
 	git pull
 	make build-images
 	docker-compose up -d
+	sleep 5
 	make load-all
 
 # TODO: autogenerate targets
