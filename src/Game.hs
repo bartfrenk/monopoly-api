@@ -109,7 +109,7 @@ computeRent Site {..} = do
       logDebugN $
         unwords
           [tshow siteSiteType, "owned", tshow owned, "die", tshow dieResult]
-      return (computeUtilityRent price owned dieResult, [dieResult])
+      return (computeUtilityRent price owned dieResult, [dieResult, price, owned])
     Station -> do
       owned <-
         selectList [SiteOwnerId ==. Just ownerId, SiteSiteType ==. Station] []
