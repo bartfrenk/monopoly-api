@@ -302,7 +302,7 @@ updateTeam teamE = do
   let team = entityVal teamE
   now <- liftIO getCurrentTime
   let team' = refreshStatus now team
-  when (team' /= team) $ replace (entityKey teamE) team
+  when (team' /= team) $ replace (entityKey teamE) team'
   return team'
 
 getLastLocation
