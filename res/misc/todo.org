@@ -10,6 +10,7 @@
   CLOSED: [2016-11-11 Fri 14:19]
 * DONE Add to-start endpoint
   CLOSED: [2016-11-11 Fri 14:19]
+* TODO Serialize data in to sync endpoint as show (T..Z)
 * TEST Fix rents
 Undefined behaviour if the total number of colors in the database do not match
 with the rules of the game.
