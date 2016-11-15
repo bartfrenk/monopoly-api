@@ -36,6 +36,14 @@ up-docker-pg: ## Run monopoly-pg in the background. Create it if it doesn't exis
 			bartfrenk/monopoly-pg 2> /dev/null; \
 	docker start monopoly-pg
 
+restart-and-deploy: ## Stops Docker Compose, rebuild images and Launches Docker again. Then loads the DB.
+	docker-compose down -v
+	git pull
+	make build-images
+	docker-compose up -d
+	sleep 5
+	make load-all
+
 # TODO: autogenerate targets
 build-samples: target/samples/locations.json \
 			   target/samples/team-1.json \
