@@ -2,3 +2,4 @@ res/*.json
 local/
 target/
 TAGS
+.stack-work
