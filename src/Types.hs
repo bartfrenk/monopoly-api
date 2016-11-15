@@ -88,6 +88,45 @@ instance FromJSON SiteType where
 instance ToJSON SiteType where
   toJSON = toJSON . show
 
+
+data QuestionD = QuestionD
+  { phrase :: String
+  , options :: [String]
+  , token :: QuestionToken
+  } deriving (Eq, Show, Read, Generic)
+
+instance ToJSON QuestionD
+
+data ChanceCard
+  = GoToJail
+  | GoToStart Money
+  | NoQuestion Token
+  | Q QuestionD
+  deriving (Show, Eq, Read, Generic)
+
+instance ToJSON ChanceCard
+
+data VisitRes
+  = PickCard [ChanceCard]
+  | InsufficientMoneyToBuy
+  | InsufficientMoneyToRent
+  | ReceivedStartBonus Money
+  | IllegalVisitWhileInJail
+  | PayedRent Money
+              String
+              [DieResult]
+  | TeamPutInJail UTCTime
+  | SiteOwnedByVisitor
+  | RepeatedVisit VisitRes
+  | NoVisitResult
+  deriving (Eq, Show, Read, Generic)
+
+instance ToJSON VisitRes
+
+derivePersistField "VisitRes"
+
+derivePersistField "ChanceCard"
+
 derivePersistField "Location"
 
 derivePersistField "TeamStatus"
@@ -97,3 +136,4 @@ derivePersistField "UtilityType"
 derivePersistField "SiteType"
 
 derivePersistField "TransactionReason"
+

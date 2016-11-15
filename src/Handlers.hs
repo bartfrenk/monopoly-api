@@ -25,24 +25,6 @@ import Models
 type ActionM = LoggingT (ExceptT ActionErr IO)
 
 instance MonadAction ActionM
-
-data VisitRes
-  = PickCard [ChanceCard]
-  | InsufficientMoneyToBuy
-  | InsufficientMoneyToRent
-  | ReceivedStartBonus Money
-  | IllegalVisitWhileInJail
-  | PayedRent Money
-              Team
-              [DieResult]
-  | TeamPutInJail UTCTime
-  | SiteOwnedByVisitor
-  | RepeatedVisit
-  | NoVisitResult
-  deriving (Eq, Show, Generic)
-
-instance ToJSON VisitRes
-
 data BuyRes
   = SuccessfullyBought
   | InsufficientMoney
@@ -81,57 +63,65 @@ visit siteT teamT = do
     visit' siteE teamE = do
       now <- liftIO getCurrentTime
       repeated <- isRepeatedVisit siteE teamE
-      storeVisit now siteE teamE
-      if repeated
-        then return RepeatedVisit
-        else let team = entityVal teamE
-                 site = entityVal siteE
-                 teamId = entityKey teamE
-             in case (teamStatus team, siteSiteType site, sitePrice site) of
-                  (ToJail, Jail, _) -> do
-                    _ <- update teamId [TeamStatus =. InJail now]
-                    return $ TeamPutInJail now
-                  (ToStart bonus, Start, _) -> do
-                    _ <- pay bonus Nothing (Just teamE) Nothing StartBonus
-                    _ <- update teamId [TeamStatus =. Free]
-                    return $ ReceivedStartBonus bonus
-                  (InJail _, Jail, _) -> return NoVisitResult
-                  (InJail _, _, _) -> return IllegalVisitWhileInJail
-                  (Free, _, Just price) -> do
-                    mownerE <- getOwner site
-                    case mownerE of
-                      Nothing ->
-                        if price <= teamMoney team
-                          then do
-                            chanceCards <- drawChanceCards (Just siteE)
-                            return $ PickCard chanceCards
-                          else return InsufficientMoneyToBuy
-                      Just ownerE ->
-                        if ownerE /= teamE
-                          then do
-                            (rent, dice) <- computeRent site
-                            success <-
-                              pay rent (Just teamE) (Just ownerE) (Just siteE) Rent
-                            if success
-                              then return $ PayedRent rent (entityVal ownerE) dice
-                              else return InsufficientMoneyToRent
-                          else return SiteOwnedByVisitor
-                  _ -> return NoVisitResult
+      result <- case repeated of
+        Just (RepeatedVisit result) -> return $ RepeatedVisit result
+        Just result -> return $ RepeatedVisit result
+        Nothing ->
+          let team = entityVal teamE
+              site = entityVal siteE
+              teamId = entityKey teamE
+          in case (teamStatus team, siteSiteType site, sitePrice site) of
+               (ToJail, Jail, _) -> do
+                 _ <- update teamId [TeamStatus =. InJail now]
+                 return $ TeamPutInJail now
+               (ToStart bonus, Start, _) -> do
+                 _ <- pay bonus Nothing (Just teamE) Nothing StartBonus
+                 _ <- update teamId [TeamStatus =. Free]
+                 return $ ReceivedStartBonus bonus
+               (InJail _, Jail, _) -> return NoVisitResult
+               (InJail _, _, _) -> return IllegalVisitWhileInJail
+               (Free, Jail, _) -> return NoVisitResult
+               (Free, Start, _) -> return NoVisitResult
+               (Free, _, Just price) -> do
+                 mownerE <- getOwner site
+                 case mownerE of
+                   Nothing ->
+                     if price <= teamMoney team
+                       then do
+                         chanceCards <- drawChanceCards (Just siteE)
+                         return $ PickCard chanceCards
+                       else return InsufficientMoneyToBuy
+                   Just ownerE ->
+                     if ownerE /= teamE
+                       then do
+                         (rent, dice) <- computeRent site
+                         success <-
+                           pay rent (Just teamE) (Just ownerE) (Just siteE) Rent
+                         if success
+                           then return $ PayedRent rent (teamName $ entityVal ownerE) dice
+                           else return InsufficientMoneyToRent
+                       else return SiteOwnedByVisitor
+               _ -> return NoVisitResult
+      storeVisit now siteE teamE result
+      return result
     isRepeatedVisit
       :: (MonadIO m, MonadLogger m)
-      => SiteE -> TeamE -> SqlPersistT m Bool
+      => SiteE -> TeamE -> SqlPersistT m (Maybe VisitRes)
     isRepeatedVisit siteE teamE = do
       mlastVisit <- getLastVisit teamE
       case mlastVisit of
-        Nothing -> return False
+        Nothing -> return Nothing
         Just lastVisit -> do
           logDebugN (tshow lastVisit)
           lastSite' <- get $ visitSiteId lastVisit
           let lastSite = fromJust lastSite' --
           logDebugN (tshow lastSite)
           let currentSite = entityVal siteE
-          return $
-            currentSite == lastSite && siteUpdated currentSite < visitWhen lastVisit
+          let isRepeated =
+                currentSite == lastSite && siteUpdated currentSite < visitWhen lastVisit
+          if isRepeated
+            then return $ visitResult lastVisit
+            else return Nothing
     getLastVisit
       :: MonadIO m
       => TeamE -> SqlPersistT m (Maybe Visit)
@@ -144,9 +134,9 @@ visit siteT teamT = do
         (visitE:_) -> return $ Just $ entityVal visitE
     storeVisit
       :: MonadIO m
-      => UTCTime -> SiteE -> TeamE -> SqlPersistT m ()
-    storeVisit t siteE teamE = do
-      _ <- insert $ Visit t (entityKey siteE) (entityKey teamE)
+      => UTCTime -> SiteE -> TeamE -> VisitRes -> SqlPersistT m ()
+    storeVisit t siteE teamE res = do
+      _ <- insert $ Visit t (entityKey siteE) (entityKey teamE) (Just res)
       return ()
     getOwner
       :: MonadIO m

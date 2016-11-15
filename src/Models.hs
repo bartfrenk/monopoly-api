@@ -24,6 +24,7 @@ import Database.Persist.TH
 import GHC.Generics
 import Types
 
+
 share
   [mkPersist sqlSettings, mkMigrate "migrateAll"]
   [persistLowerCase|
@@ -56,6 +57,7 @@ Visit
   when UTCTime
   siteId SiteId
   teamId TeamId
+  result VisitRes Maybe
   deriving Show
   deriving Eq
 
@@ -137,14 +139,6 @@ data QuestionU = QuestionU
 
 instance FromJSON QuestionU
 
-data QuestionD = QuestionD
-  { phrase :: String
-  , options :: [String]
-  , token :: QuestionToken
-  } deriving (Eq, Show, Generic)
-
-instance ToJSON QuestionD
-
 toQuestionD :: Question -> QuestionD
 toQuestionD Question {..} =
   QuestionD
@@ -152,12 +146,3 @@ toQuestionD Question {..} =
   , options = questionOptions
   , token = questionToken
   }
-
-data ChanceCard
-  = GoToJail
-  | GoToStart Money
-  | NoQuestion Token
-  | Q QuestionD
-  deriving (Show, Eq, Generic)
-
-instance ToJSON ChanceCard

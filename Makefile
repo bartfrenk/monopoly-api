@@ -115,6 +115,7 @@ api-buy-question: ## Simulate buying a location with a question chance card
 
 api-to-jail: ## Simulate drawing a ToJail chance card
 	@curl -X 'POST' -v ${SERVER_ADDRESS}/teams/${team}/to-jail
+
 api-to-start: ## Simulate drawing a ToStart chance card
 	@curl -X 'POST' -v ${SERVER_ADDRESS}/teams/${team}/to-start?amount=${amount}
 
