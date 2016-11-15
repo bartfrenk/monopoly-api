@@ -7,6 +7,7 @@ import Data.Aeson
 import Data.Time.Clock
 import Data.Word
 import Database.Persist.TH
+import Data.Time.Format
 import GHC.Generics
 
 type Money = Int
@@ -51,7 +52,11 @@ instance FromJSON TeamStatus where
   parseJSON v = read <$> parseJSON v
 
 instance ToJSON TeamStatus where
-  toJSON = toJSON . show
+  toJSON s@ToJail = toJSON $ show s
+  toJSON s@(ToStart _) = toJSON $ show s
+  toJSON s@Free = toJSON $ show s
+  toJSON (InJail t) = let fmt = iso8601DateFormat (Just "%H:%M:%S%QZ")
+                      in toJSON $ "InJail " ++ formatTime defaultTimeLocale fmt t
 
 data UtilityType
   = Water
