@@ -3,7 +3,7 @@
     - Steenkoolmijn
     - Klokkentoren
     - Electriciteitscentrale
-    - Station?
+    - Station
   answerIndex: 3
   site: Heuvel Gallerie
 
@@ -181,7 +181,7 @@
 - phrase: Welke watermolen ligt stroomafwaarts van de Genneper Watermolen?
   options:
     - Volmolen te Waalre
-    - Stratumse Watermolen?
+    - Stratumse Watermolen
   answerIndex: 1
   site: Genneper Watermolen
 
