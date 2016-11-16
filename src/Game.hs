@@ -125,7 +125,7 @@ computeRent Site {..} = do
       owned <- selectList [SiteColor ==. color, SiteOwnerId ==. Just teamId] []
       return (length sameColor, length owned)
     computeStreetRent :: Money -> Int -> Int -> Money
-    computeStreetRent price total owned =
+    computeStreetRent price owned total =
       case (total, owned) of
         (_, 0) -> 0
         (1, _) -> floor (toRational price / 2)
