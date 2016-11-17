@@ -36,7 +36,8 @@ up-docker-pg: ## Run monopoly-pg in the background. Create it if it doesn't exis
 			bartfrenk/monopoly-pg 2> /dev/null; \
 	docker start monopoly-pg
 
-restart-and-deploy: ## Stops Docker Compose, rebuild images and Launches Docker again. Then loads the DB.
+restart-and-deploy: ## Stops Docker Compose, rebuild images and launches Docker again.
+                    ## Then loads the database.
 	docker-compose down -v
 	git pull
 	make build-images
@@ -132,5 +133,8 @@ api-list-locations: ## Return loaded sites
 
 api-game-overview: ## Returns game status
 	@curl ${SERVER_ADDRESS}/teams/status
+
+api-owned: ## Returns tokens of sites owned by team
+	@curl -v ${SERVER_ADDRESS}/teams/${team}/owned
 
 ##
