@@ -1,5 +1,8 @@
 #+TODO: TODO WAIT TEST NICE-TO-HAVE | DONE CANCELED
 
+* TODO Bug: no price payed when first registered (reproduce)
+* TODO Allow for negative money
+* TODO Add GET teams/<token>/sites endpoint to return list of owned locations
 * DONE Run server in Docker file
   CLOSED: [2016-11-11 Fri 12:46]
 * DONE Register transactions
@@ -10,13 +13,18 @@
   CLOSED: [2016-11-11 Fri 14:19]
 * DONE Add to-start endpoint
   CLOSED: [2016-11-11 Fri 14:19]
-* TODO Serialize data in to sync endpoint as show (T..Z)
-* TEST Fix rents
+* DONE Serialize data in to sync endpoint as show (T..Z)
+  CLOSED: [2016-11-17 do 09:17]
+* DONE Fix bug: sync does not update status in database
+  CLOSED: [2016-11-17 do 09:17]
+* DONE Fix rents
+  CLOSED: [2016-11-17 do 09:17]
 Undefined behaviour if the total number of colors in the database do not match
 with the rules of the game.
 * DONE Update team status on visit
   CLOSED: [2016-11-11 Fri 14:36]
-* TEST Implement drawing chance cards
+* DONE Implement drawing chance cards
+  CLOSED: [2016-11-17 do 09:17]
 * DONE Disallow double visits only for rent
   CLOSED: [2016-11-11 Fri 12:00]
 Need to store transaction
