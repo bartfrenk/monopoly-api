@@ -25,6 +25,7 @@ import Models
 type ActionM = LoggingT (ExceptT ActionErr IO)
 
 instance MonadAction ActionM
+
 data BuyRes
   = SuccessfullyBought
   | InsufficientMoney
@@ -63,45 +64,47 @@ visit siteT teamT = do
     visit' siteE teamE = do
       now <- liftIO getCurrentTime
       repeated <- isRepeatedVisit siteE teamE
-      result <- case repeated of
-        Just (RepeatedVisit result) -> return $ RepeatedVisit result
-        Just result -> return $ RepeatedVisit result
-        Nothing ->
-          let team = entityVal teamE
-              site = entityVal siteE
-              teamId = entityKey teamE
-          in case (teamStatus team, siteSiteType site, sitePrice site) of
-               (ToJail, Jail, _) -> do
-                 _ <- update teamId [TeamStatus =. InJail now]
-                 return $ TeamPutInJail now
-               (ToStart bonus, Start, _) -> do
-                 _ <- pay bonus Nothing (Just teamE) Nothing StartBonus
-                 _ <- update teamId [TeamStatus =. Free]
-                 return $ ReceivedStartBonus bonus
-               (InJail _, Jail, _) -> return NoVisitResult
-               (InJail _, _, _) -> return IllegalVisitWhileInJail
-               (Free, Jail, _) -> return NoVisitResult
-               (Free, Start, _) -> return NoVisitResult
-               (Free, _, Just price) -> do
-                 mownerE <- getOwner site
-                 case mownerE of
-                   Nothing ->
-                     if price <= teamMoney team
-                       then do
-                         chanceCards <- drawChanceCards (Just siteE)
-                         return $ PickCard chanceCards
-                       else return InsufficientMoneyToBuy
-                   Just ownerE ->
-                     if ownerE /= teamE
-                       then do
-                         (rent, dice) <- computeRent site
-                         success <-
-                           pay rent (Just teamE) (Just ownerE) (Just siteE) Rent
-                         if success
-                           then return $ PayedRent rent (teamName $ entityVal ownerE) dice
-                           else return InsufficientMoneyToRent
-                       else return SiteOwnedByVisitor
-               _ -> return NoVisitResult
+      result <-
+        case repeated of
+          Just (RepeatedVisit result) -> return $ RepeatedVisit result
+          Just result -> return $ RepeatedVisit result
+          Nothing ->
+            let team = entityVal teamE
+                site = entityVal siteE
+                teamId = entityKey teamE
+            in case (teamStatus team, siteSiteType site, sitePrice site) of
+                 (ToJail, Jail, _) -> do
+                   _ <- update teamId [TeamStatus =. InJail now]
+                   return $ TeamPutInJail now
+                 (ToStart bonus, Start, _) -> do
+                   _ <- pay bonus Nothing (Just teamE) Nothing StartBonus
+                   _ <- update teamId [TeamStatus =. Free]
+                   return $ ReceivedStartBonus bonus
+                 (InJail _, Jail, _) -> return NoVisitResult
+                 (InJail _, _, _) -> return IllegalVisitWhileInJail
+                 (Free, Jail, _) -> return NoVisitResult
+                 (Free, Start, _) -> return NoVisitResult
+                 (Free, _, Just price) -> do
+                   mownerE <- getOwner site
+                   case mownerE of
+                     Nothing ->
+                       if price <= teamMoney team
+                         then do
+                           chanceCards <- drawChanceCards (Just siteE)
+                           return $ PickCard chanceCards
+                         else return InsufficientMoneyToBuy
+                     Just ownerE ->
+                       if ownerE /= teamE
+                         then do
+                           (rent, dice) <- computeRent site
+                           success <-
+                             pay rent (Just teamE) (Just ownerE) (Just siteE) Rent
+                           if success
+                             then return $
+                                  PayedRent rent (teamName $ entityVal ownerE) dice
+                             else return InsufficientMoneyToRent
+                         else return SiteOwnedByVisitor
+                 _ -> return NoVisitResult
       storeVisit now siteE teamE result
       return result
     isRepeatedVisit
@@ -293,3 +296,16 @@ teamOverview teamE = do
     , sitesOwned = totalSitesOwned
     , name = teamName team
     }
+
+getOwned
+  :: MonadAction m
+  => TeamToken -> SqlPersistT m [SiteToken]
+getOwned teamT = do
+  logInfoN $ unwords ["owned", tshow teamT]
+  mteamE <- getBy $ UniqueTeamToken teamT
+  case mteamE of
+    Nothing -> throwError $ TeamNotFound teamT
+    Just teamE -> do
+      let teamId = entityKey teamE
+      sitesE <- selectList [SiteOwnerId ==. Just teamId] [Desc SiteUpdated]
+      return $ (siteToken . entityVal) `fmap` sitesE

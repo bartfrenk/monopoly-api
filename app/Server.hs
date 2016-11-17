@@ -77,7 +77,9 @@ server connStr = enter nat $ siteServer :<|> teamServer :<|> questionServer
       goToStart :<|>
       goToStartOption :<|>
       gameOverview :<|>
-      gameOverviewOption
+      gameOverviewOption :<|>
+      getOwned :<|>
+      getOwnedOption
     questionServer = newQuestions :<|> succeed
 
 tcpPort :: Int
@@ -100,6 +102,9 @@ visitOption _ _ = return NoContent
 
 buyOption :: SiteToken -> TeamToken -> HandlerM NoContent
 buyOption _ _ = return NoContent
+
+getOwnedOption :: TeamToken -> HandlerM NoContent
+getOwnedOption _ = return NoContent
 
 syncOption :: TeamToken -> HandlerM NoContent
 syncOption _ = return NoContent
