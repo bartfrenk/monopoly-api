@@ -242,7 +242,7 @@ jailTime :: NominalDiffTime
 jailTime = 300
 
 startingMoney :: Money
-startingMoney = 1000
+startingMoney = 10000
 
 createTeam
   :: MonadIO m
