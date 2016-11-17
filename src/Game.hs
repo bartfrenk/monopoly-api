@@ -182,7 +182,7 @@ draw must fill =
       jailProb = 1 % 10
       toStartProb :: Rational
       toStartProb = 1 % 10
-      startBonus = 100
+      startBonus = 250
   in do unless (null must) $
           do siteCards <- liftIO $ choice 1 must
              modify' (++ siteCards)
