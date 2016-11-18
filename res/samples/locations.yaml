@@ -1,239 +1,386 @@
+#- name: Heuvel Gallerie
+#  siteType: Street
+#  color: Brown
+#  price: 200
+#  location:
+#    latitude: 51.4383
+#    longitude: 5.4806
+#
+#- name: Woenselse Markt
+#  siteType: Street
+#  color: Brown
+#  price: 100
+#  location:
+#    latitude: 51.4513
+#    longitude: 5.4717
+#
+#- name: NS Station Eindhoven
+#  siteType: Station
+#  color: Black
+#  price: 200
+#  location:
+#    latitude: 51.4422
+#    longitude: 5.4799
+#
+#- name: St. Catharina kerk
+#  siteType: Street
+#  color: LightBlue
+#  price: 200
+#  location:
+#    latitude: 51.4371
+#    longitude: 5.4796
+#
+#- name: Steentjeskerk
+#  siteType: Street
+#  color: LightBlue
+#  price: 150
+#  location:
+#    latitude: 51.4395
+#    longitude: 5.4678
+#
+#- name: Evoluon
+#  siteType: Street
+#  color: LightBlue
+#  price: 75
+#  location:
+#    latitude: 51.4438
+#    longitude: 5.4468
+#
+#- name: Fontys Campus Rachelsmolen
+#  siteType: Street
+#  color: Purple
+#  price: 100
+#  location:
+#    latitude: 51.4516
+#    longitude: 5.4813
+#
+#- name: Centrale Essent Beukenlaan
+#  siteType: Utility Electra
+#  color: White
+#  price: 200
+#  location:
+#    latitude: 51.4489
+#    longitude: 5.4538
+#
+#- name: Limbopad
+#  siteType: Street
+#  color: Purple
+#  price: 150
+#  location:
+#    latitude: 51.4458
+#    longitude: 5.4832
+#
+#- name: GreenHouse Group
+#  siteType: Street
+#  color: Purple
+#  price: 250
+#  location:
+#    latitude: 51.4403
+#    longitude: 5.4757
+#
+#- name: Busstation Woensel XL
+#  siteType: Station
+#  color: Black
+#  price: 200
+#  location:
+#    latitude: 51.4670
+#    longitude: 5.4754
+#
+#- name: Philips van Lenneppark
+#  siteType: Street
+#  color: Orange
+#  price: 50
+#  location:
+#    latitude: 51.4463
+#    longitude: 5.4319
+#
+#- name: 18 Septemberplein
+#  siteType: Street
+#  color: Orange
+#  price: 200
+#  location:
+#    latitude: 51.4413
+#    longitude: 5.4771
+#
+#- name: Parktheater
+#  siteType: Street
+#  color: Orange
+#  price: 75
+#  location:
+#    latitude: 51.4291
+#    longitude: 5.4842
+#
+#- name: PSV Stadion
+#  siteType: Street
+#  color: Red
+#  price: 150
+#  location:
+#    latitude: 51.4413
+#    longitude: 5.4689
+#
+#- name: Sporthal Strijp
+#  siteType: Street
+#  color: Red
+#  price: 75
+#  location:
+#    latitude: 51.4366
+#    longitude: 5.4467
+#
+#- name: Fit All Day Eindhoven
+#  siteType: Street
+#  color: Red
+#  price: 150
+#  location:
+#    latitude: 51.4409
+#    longitude: 5.4793
+#
+#- name: NS Station Strijp S
+#  siteType: Station
+#  color: Black
+#  price: 200
+#  location:
+#    latitude: 51.4501
+#    longitude: 5.4570
+#
+#- name: Effenaar
+#  siteType: Street
+#  color: Yellow
+#  price: 150
+#  location:
+#    latitude: 51.4416
+#    longitude: 5.4834
+#
+#- name: Stratumseind
+#  siteType: Street
+#  color: Yellow
+#  price: 200
+#  location:
+#    latitude: 51.4368
+#    longitude: 5.4806
+#
+#- name: Genneper Watermolen
+#  siteType: Utility Water
+#  color: White
+#  price: 100
+#  location:
+#    latitude: 51.4230
+#    longitude: 5.4701
+#
+#- name: PopEI
+#  siteType: Street
+#  color: Yellow
+#  price: 50
+#  location:
+#    latitude: 51.4493
+#    longitude: 5.4571
+#
+#- name: Jail
+#  siteType: Jail
+#  color: White
+#  price: 0
+#  location:
+#    latitude: 51.4365
+#    longitude: 5.4814
+#
+#- name: Prehistorisch dorp
+#  siteType: Street
+#  color: Green
+#  price: 75
+#  location:
+#    latitude: 51.4234
+#    longitude: 5.4769
+#
+#- name: Van Abbe museum
+#  siteType: Street
+#  color: Green
+#  price: 150
+#  location:
+#    latitude: 51.4343
+#    longitude: 5.4821
+#
+#- name: DAF Museum
+#  siteType: Street
+#  color: Green
+#  price: 100
+#  location:
+#    latitude: 51.4372
+#    longitude: 5.4904
+#
+#- name: Eindhoven Airport
+#  siteType: Station
+#  color: Black
+#  price: 200
+#  location:
+#    latitude: 51.4579
+#    longitude: 5.3917
+#
+#- name: Kleine Berg
+#  siteType: Street
+#  color: DarkBlue
+#  price: 300
+#  location:
+#    latitude: 51.4370
+#    longitude: 5.4752
+#
+#- name: Radio Monument
+#  siteType: Street
+#  color: DarkBlue
+#  price: 150
+#  location:
+#    latitude: 51.4266
+#    longitude: 5.4817
+#
+#- name: Go
+#  siteType: Start
+#  color: White
+#  price: 0
+#  location:
+#    latitude: 51.4396
+#    longitude: 5.4755
+
+
+## WEESP
+
 - name: Heuvel Gallerie
   siteType: Street
   color: Brown
   price: 200
   location:
-    latitude: 51.4383
-    longitude: 5.4806
+    latitude: 52.3084
+    longitude: 5.0421
 
 - name: Woenselse Markt
   siteType: Street
   color: Brown
   price: 100
   location:
-    latitude: 51.4513
-    longitude: 5.4717
+    latitude: 52.3079
+    longitude: 5.0416
 
 - name: NS Station Eindhoven
   siteType: Station
   color: Black
   price: 200
   location:
-    latitude: 51.4422
-    longitude: 5.4799
+    latitude: 52.3095
+    longitude: 5.0431
 
 - name: St. Catharina kerk
   siteType: Street
   color: LightBlue
   price: 200
   location:
-    latitude: 51.4371
-    longitude: 5.4796
+    latitude: 52.3073
+    longitude: 5.0422
 
 - name: Steentjeskerk
   siteType: Street
   color: LightBlue
   price: 150
   location:
-    latitude: 51.4395
-    longitude: 5.4678
+    latitude: 52.3059
+    longitude: 5.0434
 
 - name: Evoluon
   siteType: Street
   color: LightBlue
   price: 75
   location:
-    latitude: 51.4438
-    longitude: 5.4468
+    latitude: 52.3055
+    longitude: 5.0435
 
 - name: Fontys Campus Rachelsmolen
   siteType: Street
   color: Purple
   price: 100
   location:
-    latitude: 51.4516
-    longitude: 5.4813
+    latitude: 52.3061
+    longitude: 5.0415
 
 - name: Centrale Essent Beukenlaan
   siteType: Utility Electra
   color: White
   price: 200
   location:
-    latitude: 51.4489
-    longitude: 5.4538
+    latitude: 52.3083
+    longitude: 5.0400
 
 - name: Limbopad
   siteType: Street
   color: Purple
   price: 150
   location:
-    latitude: 51.4458
-    longitude: 5.4832
+    latitude: 52.3089
+    longitude: 5.0405
 
 - name: GreenHouse Group
   siteType: Street
   color: Purple
   price: 250
   location:
-    latitude: 51.4403
-    longitude: 5.4757
+    latitude: 52.3083
+    longitude: 5.0410
 
 - name: Busstation Woensel XL
   siteType: Station
   color: Black
   price: 200
   location:
-    latitude: 51.4670
-    longitude: 5.4754
-
-- name: Philips van Lenneppark
-  siteType: Street
-  color: Orange
-  price: 50
-  location:
-    latitude: 51.4463
-    longitude: 5.4319
-
-- name: 18 Septemberplein
-  siteType: Street
-  color: Orange
-  price: 200
-  location:
-    latitude: 51.4413
-    longitude: 5.4771
-
-- name: Parktheater
-  siteType: Street
-  color: Orange
-  price: 75
-  location:
-    latitude: 51.4291
-    longitude: 5.4842
-
-- name: PSV Stadion
-  siteType: Street
-  color: Red
-  price: 150
-  location:
-    latitude: 51.4413
-    longitude: 5.4689
-
-- name: Sporthal Strijp
-  siteType: Street
-  color: Red
-  price: 75
-  location:
-    latitude: 51.4366
-    longitude: 5.4467
-
-- name: Fit All Day Eindhoven
-  siteType: Street
-  color: Red
-  price: 150
-  location:
-    latitude: 51.4409
-    longitude: 5.4793
-
-- name: NS Station Strijp S
-  siteType: Station
-  color: Black
-  price: 200
-  location:
-    latitude: 51.4501
-    longitude: 5.4570
-
-- name: Effenaar
-  siteType: Street
-  color: Yellow
-  price: 150
-  location:
-    latitude: 51.4416
-    longitude: 5.4834
-
-- name: Stratumseind
-  siteType: Street
-  color: Yellow
-  price: 200
-  location:
-    latitude: 51.4368
-    longitude: 5.4806
-
-- name: Genneper Watermolen
-  siteType: Utility Water
-  color: White
-  price: 100
-  location:
-    latitude: 51.4230
-    longitude: 5.4701
-
-- name: PopEI
-  siteType: Street
-  color: Yellow
-  price: 50
-  location:
-    latitude: 51.4493
-    longitude: 5.4571
-
-- name: Jail
-  siteType: Jail
-  color: White
-  price: 0
-  location:
-    latitude: 51.4365
-    longitude: 5.4814
-
-- name: Prehistorisch dorp
-  siteType: Street
-  color: Green
-  price: 75
-  location:
-    latitude: 51.4234
-    longitude: 5.4769
-
-- name: Van Abbe museum
-  siteType: Street
-  color: Green
-  price: 150
-  location:
-    latitude: 51.4343
-    longitude: 5.4821
-
-- name: DAF Museum
-  siteType: Street
-  color: Green
-  price: 100
-  location:
-    latitude: 51.4372
-    longitude: 5.4904
-
-- name: Eindhoven Airport
-  siteType: Station
-  color: Black
-  price: 200
-  location:
-    latitude: 51.4579
-    longitude: 5.3917
-
-- name: Kleine Berg
-  siteType: Street
-  color: DarkBlue
-  price: 300
-  location:
-    latitude: 51.4370
-    longitude: 5.4752
-
-- name: Radio Monument
-  siteType: Street
-  color: DarkBlue
-  price: 150
-  location:
-    latitude: 51.4266
-    longitude: 5.4817
+    latitude: 52.3071
+    longitude: 5.0449
 
 - name: Go
   siteType: Start
   color: White
   price: 0
   location:
-    latitude: 51.4396
-    longitude: 5.4755
+    latitude: 52.3057
+    longitude: 5.0444
+
+- name: Jail
+  siteType: Jail
+  color: White
+  price: 0
+  location:
+    latitude: 52.3056
+    longitude: 5.0463
+
+- name: Genneper Watermolen
+  siteType: Utility Water
+  color: White
+  price: 100
+  location:
+    latitude: 52.3065
+    longitude: 5.0454
+
+- name: Kleine Berg
+  siteType: Street
+  color: DarkBlue
+  price: 300
+  location:
+    latitude: 52.3079
+    longitude: 5.0424
+
+- name: Radio Monument
+  siteType: Street
+  color: DarkBlue
+  price: 150
+  location:
+    latitude: 52.3065
+    longitude: 5.0415
+
+- name: Eindhoven Airport
+  siteType: Station
+  color: Black
+  price: 200
+  location:
+    latitude: 52.3066
+    longitude: 5.0397
+
+- name: NS Station Strijp S
+  siteType: Station
+  color: Black
+  price: 200
+  location:
+    latitude: 52.3083
+    longitude: 5.0387
