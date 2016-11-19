@@ -1,8 +1,12 @@
 #+TODO: TODO WAIT TEST NICE-TO-HAVE | DONE CANCELED
 
-* TODO Bug: no price payed when first registered (reproduce)
+* DONE Bug: no price payed when first registered (reproduce)
+  Reproduce: In frontend I don't do a visit call when you don't start on Go after registering team.
+  I've implemented this now. So this bug is fixed!
+  CLOSED: [2016-11-18 Fri 14:34]
 * TODO Allow for negative money
-* TODO Add GET teams/<token>/sites endpoint to return list of owned locations
+* DONE Add GET teams/<token>/owned endpoint to return list of owned locations
+  CLOSED: [2016-11-17 Thu 20:45]
 * DONE Run server in Docker file
   CLOSED: [2016-11-11 Fri 12:46]
 * DONE Register transactions
