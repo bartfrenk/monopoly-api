@@ -134,13 +134,13 @@
     latitude: 51.4409
     longitude: 5.4793
 
-- name: NS Station Strijp S
-  siteType: Station
-  color: Black
-  price: 200
-  location:
-    latitude: 51.4501
-    longitude: 5.4570
+#- name: NS Station Strijp S
+#  siteType: Station
+#  color: Black
+#  price: 200
+#  location:
+#    latitude: 51.4501
+#    longitude: 5.4570
 
 - name: Effenaar
   siteType: Street
