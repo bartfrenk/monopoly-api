@@ -7,7 +7,7 @@
   answerIndex: 3
   site: Heuvel Gallerie
 
-- phrase: Hoeveel parkeerplekken heeft de woenselse markt?
+- phrase: Hoeveel parkeerplekken heeft de Woenselse Markt?
   options:
     - "165"
     - "195"
@@ -34,7 +34,7 @@
   answerIndex: 1
   site: St. Catharina kerk
 
-- phrase: In welk jaar werd de steentjeskerk definitief voor sloop behoed omdat het op de gemeentelijke monumentenijst werd gezet?
+- phrase: In welk jaar werd de steentjeskerk definitief voor sloop behoed omdat het op de gemeentelijke monumentenlijst werd gezet?
   options:
     - "1945"
     - "1977"
@@ -43,7 +43,7 @@
   answerIndex: 1
   site: Steentjeskerk
 
-- phrase: Hoeveel kilometer spankabel is er verwerkt in het beton van de schotel van het evoluon?
+- phrase: Hoeveel kilometer spankabel is er verwerkt in het beton van de schotel van het Evoluon?
   options:
     - "6 km"
     - "9 km"
@@ -52,7 +52,7 @@
   answerIndex: 3
   site: Evoluon
 
-- phrase: Voor de hoeveelste keer neemt "Fontys Centrum voor Onderwijs" de Regie op zich bij de "Student Startup Award Brabant" die zal plaatsvinden op 24 november 2016?
+- phrase: Voor de hoeveelste keer neemt Fontys Centrum voor Onderwijs de regie op zich bij de "Student Startup Award Brabant" die zal plaatsvinden op 24 november 2016?
   options:
     - "1e keer"
     - "3e keer"
@@ -70,7 +70,7 @@
   answerIndex: 3
   site: Centrale Essent Beukenlaan
 
-- phrase: In welk jaar krijgt de Universiteit het aanbod, van de gemeente Eindhoven, om het stuk grond op de hoek van de Prof.dr. Dorgelolaan en de John F. Kennedylaan te kopen voor anderhalf miljoen gulden?
+- phrase: In welk jaar krijgt de Universiteit het aanbod van de gemeente Eindhoven, om het stuk grond op de hoek van de Prof.dr. Dorgelolaan en de John F. Kennedylaan te kopen voor anderhalf miljoen gulden?
   options:
     - "1980"
     - "1988"
@@ -153,10 +153,10 @@
 
 - phrase: Wie hebben de Grafics in de tunnelmuren ontworpen?
   options:
-    - "1 Bart van Hooft en Brigitt Albers"
-    - "2 Berry Sanders en Bram Tuns"
-    - "3 Chloë Alyshea en Daan Meulendijks"
-    - "4 Eric Cad en Frea Zwaag."
+    - "Bart van Hooft en Brigitt Albers"
+    - "Berry Sanders en Bram Tuns"
+    - "Chloë Alyshea en Daan Meulendijks"
+    - "Eric Cad en Frea Zwaag."
   answerIndex: 1
   site: NS Station Strijp S
 
@@ -185,7 +185,7 @@
   answerIndex: 1
   site: Genneper Watermolen
 
-- phrase: Wat is de kernactiviteit van "Popei"?
+- phrase: Wat is de kernactiviteit van "PopEI"?
   options:
     - Muziekles
     - Concertzaal
@@ -203,7 +203,7 @@
   answerIndex: 1
   site: Prehistorisch dorp
 
-- phrase: Welk schilderij van Jan Sluijters werd steeds, door de eerste portier van het Van Abbe Museum, uit de toonzaal verwijderd als er kinderen op bezoek kwamen. Omdat zij het niet mochten zien?
+- phrase: Welk schilderij van Jan Sluijters werd steeds door de eerste portier van het Van Abbe Museum uit de toonzaal verwijderd als er kinderen op bezoek kwamen. Omdat zij het niet mochten zien?
   options:
     - Liggend naakt
     - Zittend naakt
@@ -221,7 +221,7 @@
   answerIndex: 2
   site: DAF Museum
 
-- phrase: Wat is het maximum gewicht van het grootste vliegtuig dat ooit lande Eindhoven Airport?
+- phrase: Wat is het maximum gewicht van het grootste vliegtuig dat ooit landde Eindhoven Airport?
   options:
     - "405 ton"
     - "575 ton"
@@ -307,8 +307,8 @@
 - phrase: Wat was er zo bijzonder aan de metro die in april 1983 in Lille in bedrijf werd genomen?
   options:
     - de treinstellen hadden geen bestuurder
-    - de metro rijdt op luchtkussens
-    - alle metrostations liggen boven de grond
+    - de metro reed op luchtkussens
+    - alle metrostations lagen boven de grond
   answerIndex: 0
 
 - phrase: Welk gezwel bestaat echt?
@@ -395,14 +395,14 @@
     - Ford
   answerIndex: 0
 
-- phrase: Welk land is géén Schengenland en mag je dus niet vrij naar reizen als inwoner van de Europese Unie
+- phrase: Welk land is géén Schengenland en mag je dus niet vrij reizen als inwoner van de Europese Unie?
   options:
     - IJsland
     - Ierland
     - Zwitserland
   answerIndex: 1
 
-- phrase: Vorige week was Glow in Eindhoven, welk project is als permanent project gebleven?
+- phrase: Vorige week was Glow in Eindhoven, welk object is als permanent project gebleven?
   options:
     - Tunnel of Light
     - AnTUenna
@@ -412,8 +412,8 @@
 - phrase: De gemeente Eindhoven hanteert de naam Eindhoven Airport ook als naam voor een buurt in het stadsdeel Strijp. Hoeveel inwoners kent deze buurt?
   options:
     - "5"
-    - "10"
-    - "20"
+    - "11"
+    - "23"
   answerIndex: 0
 
 - phrase: Welke gratis fietsenstalling is inmiddels gesloten?
