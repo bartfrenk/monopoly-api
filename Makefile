@@ -109,9 +109,14 @@ api-cors: ## Test whether server responds to CORS request
 api-visit: ## Simulate a visit
 	@curl -X 'POST' ${SERVER_ADDRESS}/locations/${site}/visit/${team} | jq
 
-api-sync-team:
+api-sync-team: ## Simulate synching the team status
 	@curl -d '{"latitude": 21.0, "longitude": 21.0}' ${SERVER_ADDRESS}/teams/${team}/sync \
 		  -H 'Content-Type: application/json' | jq
+
+api-sync-with-site: ## Sync team that is visiting a specific site
+	@curl -d '{"latitude": 21.0, "longitude": 21.0}' \
+		  ${SERVER_ADDRESS}/teams/${team}/sync?siteToken=${site} \
+		  -H 'Content-Type: application/json'
 
 api-buy-no-question: ## Simulate buying a location without having to answer a question
 	@curl  ${SERVER_ADDRESS}/locations/${site}/buy/${team} -d "\"NoQuestionToken 10\"" \
