@@ -230,16 +230,19 @@ listSites = do
 
 syncTeam
   :: MonadAction m
-  => TeamToken -> Location -> SqlPersistT m SyncData
-syncTeam teamT loc = do
+  => TeamToken -> Location -> Maybe SiteToken -> SqlPersistT m SyncData
+syncTeam teamT loc msiteT = do
   logInfoN $ unwords ["syncTeam", tshow teamT, tshow loc]
   mteamE <- getBy $ UniqueTeamToken teamT
+  msiteE <- case msiteT of
+    Nothing -> return Nothing
+    Just siteT -> getBy $ UniqueSiteToken siteT
   case mteamE of
     Nothing -> throwError $ TeamNotFound teamT
     Just teamE -> do
       now <- liftIO getCurrentTime
       _ <- insert $ TeamLocation now (entityKey teamE) loc
-      team <- updateTeam teamE
+      team <- updateTeam teamE msiteE
       return
         SyncData
         { money = teamMoney team

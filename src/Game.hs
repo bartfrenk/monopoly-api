@@ -19,6 +19,7 @@ import Data.List (splitAt)
 import Data.Time.Clock
 import Database.Persist.Sql
 import GHC.Generics
+
 import Models
 import System.Random (randomIO, randomRIO)
 
@@ -227,10 +228,10 @@ canBuy (QuestionAnswer questionT given) = do
       let q = entityVal questionE
       in return (questionAnswerIndex q == given)
 
-refreshStatus :: UTCTime -> Team -> Team
-refreshStatus now team@Team {..} =
-  case teamStatus of
-    InJail start ->
+refreshStatus :: UTCTime -> Team -> Maybe Site -> Team
+refreshStatus now team@Team {..} msite =
+  case (teamStatus, siteSiteType `fmap` msite) of
+    (InJail start, Just Jail) ->
       if diffUTCTime now start > jailTime
         then team
              { teamStatus = Free
@@ -296,12 +297,14 @@ createQuestion QuestionU {..} = do
     }
 
 updateTeam
-  :: MonadIO m
-  => TeamE -> SqlPersistT m Team
-updateTeam teamE = do
+  :: (MonadIO m, MonadLogger m)
+  => TeamE -> Maybe SiteE -> SqlPersistT m Team
+updateTeam teamE msiteE = do
   let team = entityVal teamE
+  let msite = entityVal `fmap` msiteE
+  logDebugN $ tshow msite
   now <- liftIO getCurrentTime
-  let team' = refreshStatus now team
+  let team' = refreshStatus now team msite
   when (team' /= team) $ replace (entityKey teamE) team'
   return team'
 
