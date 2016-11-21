@@ -33,7 +33,8 @@ with the rules of the game.
   CLOSED: [2016-11-11 Fri 12:00]
 Need to store transaction
 * NICE-TO-HAVE Allow up to a fixed number of teams
-* NICE-TO-HAVE Only allow leaving Jail when close to Jail
+* DONE Only allow leaving Jail when close to Jail
+  CLOSED: [2016-11-21 Mon 23:17]
 Currently a team leaves Jail when the sync endpoint is called and the time is
 up. This could also happen outside of the boundaries of Jail.
 
