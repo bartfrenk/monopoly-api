@@ -133,6 +133,10 @@ api-to-jail: ## Simulate drawing a ToJail chance card
 api-to-start: ## Simulate drawing a ToStart chance card
 	@curl -X 'POST' -v ${SERVER_ADDRESS}/teams/${team}/to-start?amount=${amount}
 
+api-recover-team: ## Recover team details
+	@curl -v -d "{\"token\": ${team}}" ${SERVER_ADDRESS}/teams \
+		  -H 'Content-Type: application/json'
+
 api-list-locations: ## Return loaded sites
 	@curl ${SERVER_ADDRESS}/locations | jq
 
