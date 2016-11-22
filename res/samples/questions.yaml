@@ -450,3 +450,67 @@
     - "1401"
     - "1419"
   answerIndex: 2
+
+- phrase: Welke kleur heeft het gebouw van de Bijenkorf op het 18 Septemberplein?
+  options:
+    - Groen
+    - Grijs
+    - Blauw
+  answerIndex: 0
+
+- phrase: Wat verkoopt het eethuisje op het 18 Septemberplein?
+  options:
+    - Oliebollen
+    - "Loempia's"
+    - Wafels
+  answerIndex: 1
+
+- phrase: Hoeveel sporen gaan er door/langs station Eindhoven?
+  options:
+    - "6"
+    - "8"
+    - "12"
+  answerIndex: 2
+
+- phrase: Wat is de slogan van het Beursgebouw?
+  options:
+    - Natuurlijk in het beursgebouw
+    - Natuurlijk het beursgebouw
+    - Het beursgebouw natuurlijk
+  answerIndex: 0
+
+- phrase: Hoeveel ronde glazen koepels heeft Gallerie De Heuvel?
+  options:
+    - "4"
+    - "5"
+    - "6"
+  answerIndex: 0
+
+- phrase: Hoeveel ronde glazen koepels heeft Gallerie De Heuvel?
+  options:
+    - "4"
+    - "5"
+    - "6"
+  answerIndex: 0
+
+- phrase: Wat is geen Eindhovense voetbalvereniging?
+  options:
+    - PSV
+    - Voetbalvereniging D.S.B
+    - RKVV Brabantia
+  answerIndex: 1
+
+- phrase: Wat is geen Eindhovens museum?
+  options:
+    - Ton Smits Huis
+    - Museum de Pont
+    - Inkijkmuseum
+  answerIndex: 1
+
+- phrase: Eindhoven staat bekend om zijn muziekfestivals. Welke band komt uit Eindhoven?
+  options:
+    - Darkroast Blazerrs
+    - Longhair Bollocks
+    - Rainbow Mafia
+  answerIndex: 2
+
