@@ -169,7 +169,7 @@
 - name: PopEI
   siteType: Street
   color: Yellow
-  price: 50
+  price: 150
   location:
     latitude: 51.4493
     longitude: 5.4571
