@@ -93,7 +93,8 @@ type SiteE = Entity Site
 type QuestionE = Entity Question
 
 data TeamU = TeamU
-  { name :: String
+  { name :: Maybe String,
+    token :: Maybe TeamToken
   } deriving (Eq, Show, Generic)
 
 instance FromJSON TeamU

@@ -245,19 +245,6 @@ jailTime = 300
 startingMoney :: Money
 startingMoney = 10000
 
-createTeam
-  :: MonadIO m
-  => UTCTime -> TeamU -> m Team
-createTeam time TeamU {..} = do
-  tk <- liftIO randomIO
-  return
-    Team
-    { teamName = name
-    , teamToken = tk
-    , teamMoney = startingMoney
-    , teamStatus = Free
-    , teamStatusUpdated = time
-    }
 
 createSite
   :: MonadIO m

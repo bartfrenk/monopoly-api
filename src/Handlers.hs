@@ -18,9 +18,11 @@ import Database.Persist.Sql
 import Servant (NoContent(..))
 import GHC.Generics
 import Data.Maybe (fromJust)
+import System.Random (randomIO)
 
 import Game
 import Models
+import Utils (failWithC)
 
 type ActionM = LoggingT (ExceptT ActionErr IO)
 
@@ -40,6 +42,7 @@ data ActionErr
   = TeamNotFound Token
   | SiteNotFound Token
   | QuestionNotFound Token
+  | NeedNameOrToken
   deriving (Eq, Show)
 
 class (MonadIO m, MonadError ActionErr m, MonadLogger m) =>
@@ -190,10 +193,27 @@ buy siteT teamT perm = do
 newTeam
   :: MonadAction m
   => TeamU -> SqlPersistT m TeamE
-newTeam teamU = do
+newTeam teamU@TeamU {..} = do
   logInfoN $ unwords ["newTeam", tshow teamU]
   now <- liftIO getCurrentTime
-  createTeam now teamU >>= insertEntity
+  case (name, token) of
+
+    (Just name', Nothing) -> do
+      tk <- liftIO randomIO
+      let team = Team
+            { teamName = name'
+            , teamToken = tk
+            , teamMoney = startingMoney
+            , teamStatus = Free
+            , teamStatusUpdated = now
+            }
+      insertEntity team
+
+    (_, Just token') ->
+      failWithC (TeamNotFound token') (getBy $ UniqueTeamToken token')
+
+    (_, _) -> throwError NeedNameOrToken
+
 
 newSites
   :: MonadAction m
