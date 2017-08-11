@@ -3,7 +3,7 @@
 ## Haskell Stack
 
 Build tool for Haskell projects. For installation instructions see
-[https://docs.haskellstack.org]https://docs.haskellstack.org). Once installed
+[https://docs.haskellstack.org](https://docs.haskellstack.org). Once installed
 run the following in the project root.
 
 ```shell
